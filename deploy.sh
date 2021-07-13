@@ -46,12 +46,12 @@ wineboot ; sleep 5
 winetricks -q dotnet20 ; sleep 5
 
 # Install game
-(wine TiberianSun_Online_Installer.exe /silent ; sleep 20)
+(wine TiberianSun_Online_Installer.exe /silent & ; sleep 30 ; wineserver -k)
 ls -al ./
 
 # Launch game
-wine ./TiberianSun_Online/TSMPLauncher.exe &
-xdotool mousemove 200 200 click 1
+wine ./TiberianSun_Online/TSMPLauncher.exe & ; sleep 20
+xdotool mousemove 200 200 windowactivate $(xdotool search --onlyvisible TSMPLauncher.exe | tail -1) ; xdotool click 1
 sleep 30
 wineserver -k
 
