@@ -51,7 +51,6 @@ mkdir -p /home/runner/.cache/{wine,winetricks}/{dotnet20,ahk} ; cp dotnetfx.exe 
 cp -Rp *.msi /home/runner/.cache/wine/ ; cp -Rp AutoHotkey104805_Install.exe /home/runner/.cache/winetricks/ahk
 
 # Create WINEPREFIX
-wineboot ; sleep 5
 winetricks -q dotnet20 ; sleep 5
 
 # Install game
