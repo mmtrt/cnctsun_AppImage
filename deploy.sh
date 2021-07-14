@@ -87,5 +87,5 @@ if [ "$1" == "stable" ]; then
     ( mkdir -p dist ; mv cnctsun*.AppImage* dist/. ; cd dist ; chmod +x *.AppImage )
 elif [ "$1" == "stablewp" ]; then
     cnctsunswp
-    ( mkdir -p dist ; mv cnctsun*.AppImage* dist/. ; cd dist ; chmod +x *.AppImage )
+    ( mkdir -p dist ; mv cnctsun*.AppImage* dist/. ; cd dist ; chmod +x *.AppImage ; pkill openbox )
 fi
