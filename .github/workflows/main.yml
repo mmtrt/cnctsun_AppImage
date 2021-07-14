@@ -69,7 +69,7 @@ jobs:
           sudo xauth generate :99 . trusted 
           # generate our own key, xauth requires 128 bit hex encoding
           sudo xauth add ${HOST}:99 . $(xxd -l 16 -p /dev/urandom)
-          sudo nohup startx bash deploy.sh stablewp
+          sudo nohup startx -- :99 bash deploy.sh stablewp
           # bash deploy.sh stablewp
           # mkdir dist
           # mv cnctsun*.AppImage* dist/.
