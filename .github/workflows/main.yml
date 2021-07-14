@@ -61,6 +61,7 @@ jobs:
           set -ex
           export DISPLAY=':99.0'
           # sudo Xvfb :99 -screen 0 1024x768x24 >/dev/null 2>&1 & XPID=$!
+          sudo apt install openbox -y &>/dev/null
           # sudo apt install xinit -y &>/dev/null
           # sudo apt install xserver-xorg-core --no-install-recommends --no-install-suggests -y &>/dev/null
           # xauth with complain unless ~/.Xauthority exists
@@ -70,7 +71,7 @@ jobs:
           # generate our own key, xauth requires 128 bit hex encoding
           # sudo xauth add ${HOST}:99 . $(xxd -l 16 -p /dev/urandom)
           # sudo nohup startx bash deploy.sh stablewp -- :99 
-          xvfb-run --server-args="-screen 0 1024x768x24" bash deploy.sh stablewp
+          xvfb-run --server-args="-screen 0 1024x768x24" openbox-session && bash deploy.sh stablewp
           # bash deploy.sh stablewp
           # mkdir dist
           # mv cnctsun*.AppImage* dist/.
