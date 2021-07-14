@@ -70,8 +70,9 @@ jobs:
           # sudo xauth generate :99 . trusted 
           # generate our own key, xauth requires 128 bit hex encoding
           # sudo xauth add ${HOST}:99 . $(xxd -l 16 -p /dev/urandom)
-          # sudo nohup startx bash deploy.sh stablewp -- :99 
-          xvfb-run --server-args="-screen 0 1024x768x24" openbox-session && bash deploy.sh stablewp
+          # sudo nohup startx bash deploy.sh stablewp -- :99
+          mkdir -p ~/.config/openbox ; touch ~/.config/openbox/autostart ; echo "cd /home/runner/work/cnctsun_AppImage/cnctsun_AppImage" > ~/.config/openbox/autostart ; echo "bash deploy.sh stablewp" >> ~/.config/openbox/autostart
+          xvfb-run --server-args="-screen 0 1024x768x24" openbox-session &
           # bash deploy.sh stablewp
           # mkdir dist
           # mv cnctsun*.AppImage* dist/.
