@@ -19,31 +19,31 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "cnctsun"
-  cnctsun:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+  # cnctsun:
+  #   # The type of runner that the job will run on
+  #   runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+  #   # Steps represent a sequence of tasks that will be executed as part of the job
+  #   steps:
+  #     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+  #     - uses: actions/checkout@v2
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          set -ex
-          bash deploy.sh stable
-          # mkdir dist
-          # mv cnctsun*.AppImage* dist/.
-          # cd dist
-          # chmod +x *.AppImage
-          # cd ..
+  #     # Runs a set of commands using the runners shell
+  #     - name: Run a multi-line script
+  #       run: |
+  #         set -ex
+  #         bash deploy.sh stable
+  #         # mkdir dist
+  #         # mv cnctsun*.AppImage* dist/.
+  #         # cd dist
+  #         # chmod +x *.AppImage
+  #         # cd ..
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v1.0.0
-        with:
-          name: cnctsun-continuous-x86_64.AppImage
-          path: 'dist'
+  #     - name: Upload artifact
+  #       uses: actions/upload-artifact@v1.0.0
+  #       with:
+  #         name: cnctsun-continuous-x86_64.AppImage
+  #         path: 'dist'
 
   # This workflow contains a single job called "cnctsun-wp"
   cnctsun-wp:
@@ -57,22 +57,20 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
-        uses: GabrielBB/xvfb-action@v1
-        with:
-          run: sudo apt install xinit -y ; sudo apt install xserver-xorg-core --no-install-recommends --no-install-suggests -y ; nohup startx bash deploy.sh stablewp -- :99
-          # run: |
-          # set -ex
-          # export DISPLAY=':99.0'
+        run: |
+          set -ex
+          export DISPLAY=':99.0'
           # sudo Xvfb :99 -screen 0 1024x768x24 >/dev/null 2>&1 & XPID=$!
           # sudo apt install xinit -y &>/dev/null
           # sudo apt install xserver-xorg-core --no-install-recommends --no-install-suggests -y &>/dev/null
           # xauth with complain unless ~/.Xauthority exists
-          # touch ~/.Xauthority ; sudo touch /root/.Xauthority
+          touch ~/.Xauthority ; sudo touch /root/.Xauthority
           # only this one key is needed for X11 over SSH 
-          # sudo xauth generate :99 . trusted 
+          sudo xauth generate :99 . trusted 
           # generate our own key, xauth requires 128 bit hex encoding
-          # sudo xauth add ${HOST}:99 . $(xxd -l 16 -p /dev/urandom)
+          sudo xauth add ${HOST}:99 . $(xxd -l 16 -p /dev/urandom)
           # sudo nohup startx bash deploy.sh stablewp -- :99 
+          xvfb-run --server-args="-screen 0 1024x768x24" bash deploy.sh stablewp
           # bash deploy.sh stablewp
           # mkdir dist
           # mv cnctsun*.AppImage* dist/.
@@ -86,25 +84,25 @@ jobs:
           name: cnctsun-continuous-wp-x86_64.AppImage
           path: 'dist'
 
-  release-stable:
-    needs: [cnctsun]
-    runs-on: ubuntu-latest
+  # release-stable:
+  #   needs: [cnctsun]
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/download-artifact@v1
-        with:
-          name: cnctsun-continuous-x86_64.AppImage
+  #   steps:
+  #     - uses: actions/download-artifact@v1
+  #       with:
+  #         name: cnctsun-continuous-x86_64.AppImage
 
-      - name: Release
-        uses: marvinpinto/action-automatic-releases@latest
-        with:
-          title: cnctsun stable
-          automatic_release_tag: stable
-          prerelease: false
-          draft: false
-          files: |
-            cnctsun-continuous-x86_64.AppImage
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
+  #     - name: Release
+  #       uses: marvinpinto/action-automatic-releases@latest
+  #       with:
+  #         title: cnctsun stable
+  #         automatic_release_tag: stable
+  #         prerelease: false
+  #         draft: false
+  #         files: |
+  #           cnctsun-continuous-x86_64.AppImage
+  #         repo_token: ${{ secrets.GITHUB_TOKEN }}
 
   release-stable-wp:
     needs: [cnctsun-wp]
