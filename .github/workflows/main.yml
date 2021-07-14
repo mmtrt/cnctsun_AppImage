@@ -59,7 +59,7 @@ jobs:
       - name: Run a multi-line script
         uses: GabrielBB/xvfb-action@v1
         with:
-          run: bash deploy.sh stablewp
+          run: sudo apt install xinit -y &>/dev/null && sudo apt install xserver-xorg-core --no-install-recommends --no-install-suggests -y &>/dev/null && touch ~/.Xauthority && xauth generate :99 . trusted && xauth add ${HOST}:99 . $(xxd -l 16 -p /dev/urandom) && nohup startx bash deploy.sh stablewp -- :99
           # run: |
           # set -ex
           # export DISPLAY=':99.0'
@@ -72,7 +72,7 @@ jobs:
           # sudo xauth generate :99 . trusted 
           # generate our own key, xauth requires 128 bit hex encoding
           # sudo xauth add ${HOST}:99 . $(xxd -l 16 -p /dev/urandom)
-          # sudo nohup startx bash deploy.sh stablewp -- :99
+          # sudo nohup startx bash deploy.sh stablewp -- :99 
           # bash deploy.sh stablewp
           # mkdir dist
           # mv cnctsun*.AppImage* dist/.
