@@ -70,7 +70,7 @@ jobs:
           sudo apt install xserver-xorg-core --no-install-recommends --no-install-suggests -y &>/dev/null
           wget -qnc https://github.com/Winetricks/winetricks/raw/master/src/winetricks
           chmod +x winetricks ; sudo mv winetricks /usr/bin
-          nohup startx bash deploy.sh stablewp >/dev/null 2>&1 &
+          nohup startx bash deploy.sh stablewp 2>&1 &
           # bash deploy.sh stablewp
           # mkdir dist
           # mv cnctsun*.AppImage* dist/.
