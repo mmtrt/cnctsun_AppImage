@@ -30,6 +30,15 @@ export ARCH=x86_64; squashfs-root/AppRun -v ./ts-mp -u "gh-releases-zsync|mmtrt|
 
 cnctsunswp () {
 
+sudo dpkg --add-architecture i386
+wget -qnc https://dl.winehq.org/wine-builds/winehq.key
+sudo apt-key add winehq.key &>/dev/null
+sudo add-apt-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ focal main' &>/dev/null
+sudo apt update &>/dev/null
+sudo apt install --install-recommends winehq-stable -y &>/dev/null ; sudo apt install cabextract xdotool -y &>/dev/null
+wget -qnc https://github.com/Winetricks/winetricks/raw/master/src/winetricks
+chmod +x winetricks ; sudo mv winetricks /usr/bin
+
 export WINEDLLOVERRIDES="mshtml="
 export WINEARCH="win32"
 export WINEPREFIX="/home/runner/.wine"
