@@ -57,20 +57,21 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
-        run: |
-          set -ex
-          export DISPLAY=':99.0'
-          sudo Xvfb :99 -screen 0 1024x768x24 >/dev/null 2>&1 & XPID=$!
-          sudo apt install xinit -y &>/dev/null
-          sudo apt install xserver-xorg-core --no-install-recommends --no-install-suggests -y &>/dev/null
+        uses: GabrielBB/xvfb-action@v1
+        run: bash deploy.sh stablewp
+        # run: |
+          # set -ex
+          # export DISPLAY=':99.0'
+          # sudo Xvfb :99 -screen 0 1024x768x24 >/dev/null 2>&1 & XPID=$!
+          # sudo apt install xinit -y &>/dev/null
+          # sudo apt install xserver-xorg-core --no-install-recommends --no-install-suggests -y &>/dev/null
           # xauth with complain unless ~/.Xauthority exists
-          touch ~/.Xauthority ; sudo touch /root/.Xauthority
+          # touch ~/.Xauthority ; sudo touch /root/.Xauthority
           # only this one key is needed for X11 over SSH 
-          sudo xauth generate :99 . trusted 
+          # sudo xauth generate :99 . trusted 
           # generate our own key, xauth requires 128 bit hex encoding
-          sudo xauth add ${HOST}:99 . $(xxd -l 16 -p /dev/urandom)
+          # sudo xauth add ${HOST}:99 . $(xxd -l 16 -p /dev/urandom)
           # sudo nohup startx bash deploy.sh stablewp -- :99
-          xvfb-run nohup startx bash deploy.sh stablewp
           # bash deploy.sh stablewp
           # mkdir dist
           # mv cnctsun*.AppImage* dist/.
