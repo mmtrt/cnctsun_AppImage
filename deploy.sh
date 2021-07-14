@@ -10,7 +10,7 @@ done
 
 wget -qc "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
 chmod +x ./appimagetool-x86_64.AppImage
-./appimagetool-x86_64.AppImage --appimage-extract
+./appimagetool-x86_64.AppImage --appimage-extract &>/dev/null
 
 cnctsuns () {
 
@@ -22,9 +22,9 @@ wget -q "https://downloads.cncnet.org/TiberianSun_Online_Installer.exe"
 wget -q "https://download.lenovo.com/ibmdl/pub/pc/pccbbs/thinkvantage_en/dotnetfx.exe"
 wget -q "https://github.com/AutoHotkey/AutoHotkey/releases/download/v1.0.48.05/AutoHotkey104805_Install.exe"
 
-cp -Rvp ./*.exe ts-mp/winedata ; cp -Rvp ./*.msi ts-mp/winedata
+cp -Rp ./*.exe ts-mp/winedata ; cp -Rp ./*.msi ts-mp/winedata
 
-export ARCH=x86_64; squashfs-root/AppRun -v ./ts-mp -u "gh-releases-zsync|mmtrt|cnctsun_AppImage|stable|cnctsun*.AppImage.zsync" cnctsun_${ARCH}.AppImage
+export ARCH=x86_64; squashfs-root/AppRun -v ./ts-mp -u "gh-releases-zsync|mmtrt|cnctsun_AppImage|stable|cnctsun*.AppImage.zsync" cnctsun_${ARCH}.AppImage &>/dev/null
 
 }
 
@@ -39,7 +39,7 @@ cnctsuns ; rm ./*AppImage*
 
 # Create winetricks & wine cache
 mkdir -p /home/runner/.cache/{wine,winetricks}/{dotnet20,ahk} ; cp dotnetfx.exe /home/runner/.cache/winetricks/dotnet20
-cp -Rvp *.msi /home/runner/.cache/wine/ ; cp -Rvp AutoHotkey104805_Install.exe /home/runner/.cache/winetricks/ahk
+cp -Rp *.msi /home/runner/.cache/wine/ ; cp -Rp AutoHotkey104805_Install.exe /home/runner/.cache/winetricks/ahk
 
 # Create WINEPREFIX
 wineboot ; sleep 5
@@ -56,7 +56,7 @@ xdotool mousemove 200 200 windowactivate $(xdotool search TSMPLauncher.exe | tai
 sleep 30
 wineserver -k
 
-cp -Rvp ./TiberianSun_Online "$WINEPREFIX"/drive_c/
+cp -Rp ./TiberianSun_Online "$WINEPREFIX"/drive_c/
 
 # Removing any existing user data
 ( cd "$WINEPREFIX/drive_c/" ; rm -rf users ; rm windows/temp/* ) || true
@@ -65,11 +65,11 @@ cp -Rvp ./TiberianSun_Online "$WINEPREFIX"/drive_c/
 # DPI dword value 240=f0 180=b4 120=78 110=6e 96=60
 ( cd "$WINEPREFIX"; sed -i 's|"LogPixels"=dword:00000060|"LogPixels"=dword:0000006e|' ./user.reg ; sed -i 's|"LogPixels"=dword:00000060|"LogPixels"=dword:0000006e|' ./system.reg ; sed -i 's/winemenubuilder.exe -a -r/winemenubuilder.exe -r/g' ./system.reg ) || true
 
-cp -Rvp $WINEPREFIX ts-mp/ ; rm -rf $WINEPREFIX ; rm -rf ./ts-mp/winedata
+cp -Rp $WINEPREFIX ts-mp/ ; rm -rf $WINEPREFIX ; rm -rf ./ts-mp/winedata
 
 ( cd ts-mp ; wget -qO- 'https://gist.github.com/mmtrt/49df9fc50ae567a3d5d89791bdb65d45/raw/19b5f3a08fa3ec1429e989adba1cfe9314cd6b52/cnctsunswp.patch' | patch -p1 )
 
-export ARCH=x86_64; squashfs-root/AppRun -v ./ts-mp -n -u "gh-releases-zsync|mmtrt|cnctsun_AppImage|stable-wp|cnctsun*.AppImage.zsync" cnctsun_WP-${ARCH}.AppImage
+export ARCH=x86_64; squashfs-root/AppRun -v ./ts-mp -n -u "gh-releases-zsync|mmtrt|cnctsun_AppImage|stable-wp|cnctsun*.AppImage.zsync" cnctsun_WP-${ARCH}.AppImage &>/dev/null
 
 }
 
