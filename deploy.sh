@@ -52,7 +52,7 @@ ls -al ./
 # Launch game
 wine ./TiberianSun_Online/TSMPLauncher.exe &
 sleep 20
-xdotool mousemove 200 200 $(xdotool search TSMPLauncher.exe | tail -1) ; xdotool click 1
+xdotool mousemove 200 200 windowactivate $(xdotool search TSMPLauncher.exe | tail -1) ; xdotool click 1
 sleep 30
 wineserver -k
 
