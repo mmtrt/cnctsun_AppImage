@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # Convert and copy icon which is needed for desktop integration into place:
-wget https://github.com/mmtrt/cnctsun/raw/master/snap/gui/cnctsun.png &>/dev/null
+wget -q https://github.com/mmtrt/cnctsun/raw/master/snap/gui/cnctsun.png &>/dev/null
 for width in 8 16 22 24 32 36 42 48 64 72 96 128 192 256; do
     dir=icons/hicolor/${width}x${width}/apps
     mkdir -p $dir
     convert cnctsun.png -resize ${width}x${width} $dir/cnctsun.png
 done
 
-wget -c "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
+wget -qc "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
 chmod +x ./appimagetool-x86_64.AppImage
 ./appimagetool-x86_64.AppImage --appimage-extract
 
@@ -17,10 +17,10 @@ cnctsuns () {
 mkdir -p ts-mp/usr ts-mp/winedata ; cp cnctsun.desktop ts-mp ; cp AppRun ts-mp ;
 cp -r icons ts-mp/usr/share ; cp cnctsun.png ts-mp
 
-wget "https://dl.winehq.org/wine/wine-mono/5.1.1/wine-mono-5.1.1-x86.msi"
-wget "https://downloads.cncnet.org/TiberianSun_Online_Installer.exe"
-wget "https://download.lenovo.com/ibmdl/pub/pc/pccbbs/thinkvantage_en/dotnetfx.exe"
-wget "https://github.com/AutoHotkey/AutoHotkey/releases/download/v1.0.48.05/AutoHotkey104805_Install.exe"
+wget -q "https://dl.winehq.org/wine/wine-mono/5.1.1/wine-mono-5.1.1-x86.msi"
+wget -q "https://downloads.cncnet.org/TiberianSun_Online_Installer.exe"
+wget -q "https://download.lenovo.com/ibmdl/pub/pc/pccbbs/thinkvantage_en/dotnetfx.exe"
+wget -q "https://github.com/AutoHotkey/AutoHotkey/releases/download/v1.0.48.05/AutoHotkey104805_Install.exe"
 
 cp -Rvp ./*.exe ts-mp/winedata ; cp -Rvp ./*.msi ts-mp/winedata
 
