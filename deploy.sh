@@ -62,7 +62,7 @@ ls -al ./
 wine ./TiberianSun_Online/TSMPLauncher.exe &
 sleep 20
 xdotool mousemove 200 200 windowactivate $(xdotool search TSMPLauncher.exe | tail -1) ; xdotool click 1
-sleep 30
+sleep 240
 wineserver -k
 
 cp -Rp ./TiberianSun_Online "$WINEPREFIX"/drive_c/
