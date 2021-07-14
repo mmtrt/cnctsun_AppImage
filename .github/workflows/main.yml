@@ -33,11 +33,11 @@ jobs:
         run: |
           set -ex
           bash deploy.sh stable
-          mkdir dist
-          mv cnctsun*.AppImage* dist/.
-          cd dist
-          chmod +x *.AppImage
-          cd ..
+          # mkdir dist
+          # mv cnctsun*.AppImage* dist/.
+          # cd dist
+          # chmod +x *.AppImage
+          # cd ..
 
       - name: Upload artifact
         uses: actions/upload-artifact@v1.0.0
@@ -70,13 +70,13 @@ jobs:
           sudo apt install xserver-xorg-core --no-install-recommends --no-install-suggests -y &>/dev/null
           wget -qnc https://github.com/Winetricks/winetricks/raw/master/src/winetricks
           chmod +x winetricks ; sudo mv winetricks /usr/bin
-          xinit >/dev/null 2>&1 &
-          bash deploy.sh stablewp
-          mkdir dist
-          mv cnctsun*.AppImage* dist/.
-          cd dist
-          chmod +x *.AppImage
-          cd ..
+          nohup startx bash deploy.sh stablewp >/dev/null 2>&1 &
+          # bash deploy.sh stablewp
+          # mkdir dist
+          # mv cnctsun*.AppImage* dist/.
+          # cd dist
+          # chmod +x *.AppImage
+          # cd ..
 
       - name: Upload artifact
         uses: actions/upload-artifact@v1.0.0
