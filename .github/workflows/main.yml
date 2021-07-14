@@ -59,7 +59,7 @@ jobs:
       - name: Run a multi-line script
         uses: GabrielBB/xvfb-action@v1
         with:
-          run: sudo apt install xinit -y &>/dev/null && sudo apt install xserver-xorg-core --no-install-recommends --no-install-suggests -y &>/dev/null && touch ~/.Xauthority && nohup startx bash deploy.sh stablewp -- :99
+          run: sudo apt install xinit -y && sudo apt install xserver-xorg-core --no-install-recommends --no-install-suggests -y && nohup startx bash deploy.sh stablewp -- :99
           # run: |
           # set -ex
           # export DISPLAY=':99.0'
