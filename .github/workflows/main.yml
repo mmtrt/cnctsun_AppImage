@@ -63,14 +63,15 @@ jobs:
           sudo Xvfb :99 -screen 0 1024x768x24 >/dev/null 2>&1 & XPID=$!
           sudo dpkg --add-architecture i386
           wget -qnc https://dl.winehq.org/wine-builds/winehq.key
-          sudo apt-key add winehq.key
-          sudo add-apt-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ focal main'
+          sudo apt-key add winehq.key &>/dev/null
+          sudo add-apt-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ focal main' &>/dev/null
           sudo apt update &>/dev/null
           sudo apt install --install-recommends winehq-stable -y &>/dev/null ; sudo apt install cabextract xdotool xinit -y &>/dev/null
           sudo apt install xserver-xorg-core --no-install-recommends --no-install-suggests -y &>/dev/null
           wget -qnc https://github.com/Winetricks/winetricks/raw/master/src/winetricks
           chmod +x winetricks ; sudo mv winetricks /usr/bin
-          xinit bash deploy.sh stablewp >/dev/null 2>&1 &
+          xinit >/dev/null 2>&1 &
+          bash deploy.sh stablewp
           mkdir dist
           mv cnctsun*.AppImage* dist/.
           cd dist
