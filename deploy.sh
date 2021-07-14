@@ -35,7 +35,7 @@ wget -qnc https://dl.winehq.org/wine-builds/winehq.key
 sudo apt-key add winehq.key &>/dev/null
 sudo add-apt-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ focal main' &>/dev/null
 sudo apt update &>/dev/null
-sudo apt install --install-recommends winehq-stable -y &>/dev/null ; sudo apt install cabextract xdotool -y &>/dev/null
+sudo apt install --install-recommends winehq-stable -y &>/dev/null ; sudo apt install cabextract -y &>/dev/null
 wget -qnc https://github.com/Winetricks/winetricks/raw/master/src/winetricks
 chmod +x winetricks ; sudo mv winetricks /usr/bin
 
@@ -55,16 +55,24 @@ wineboot ; sleep 5
 winetricks -q dotnet20 ; sleep 5
 
 # Install game
-(wine TiberianSun_Online_Installer.exe /silent ; sleep 30 ; wineserver -k)
-ls -al ./
+(wine TiberianSun_Online_Installer.exe /silent ; sleep 10 ; wineserver -k)
 
-# Launch game
-wine ./TiberianSun_Online/TSMPLauncher.exe &
-sleep 6
-xdotool mousemove 200 200 windowactivate $(xdotool search TSMPLauncher.exe | tail -1) ; xdotool click 1 click 1
-sleep 60
-wineserver -k
+# Download game updates manually
+for pkgs in CnCNet5Version.txt cncnet5.7z Sounds.7z Language.7z Icons.7z GeoIP.7z ts-spawn.7z TS_Maps.7z TS_Rules.7z TS_CnCNet5ClientBackground.7z System.Data.SQLite.dll.7z hints.7z LAN.7z _Servers.7z ts-voxels.7z ts-config.7z ts-terrain.7z; do
+wget -q "https://downloads.cncnet.org/updates/cncnet5/${pkgs}"
+if [[ $pkgs = "CnCNet5Version.txt" || $pkgs = "_Servers.7z" || $pkgs = "GeoIP.7z" || $pkgs = "TS_CnCNet5ClientBackground.7z" || $pkgs = "hints.7z" ]]; then
+7z x -aos "$pkgs" "-otmp/CnCNet5/Others" &>/dev/null
+elif [[ $pkgs = "Icons.7z" || $pkgs = "LAN.7z" || $pkgs = "Language.7z" || $pkgs = "Sounds.7z" ]]; then
+7z x -aos "$pkgs" "-otmp/CnCNet5" &>/dev/null
+elif [[ $pkgs = "cncnet5.7z" ]]; then
+mkdir -p tmp
+7za e "$pkgs" -so > "tmp/cncnet5.exe" &>/dev/null
+else
+7z x -aos "$pkgs" "-otmp" &>/dev/null
+fi
+done
 
+cp -Rp tmp/* TiberianSun_Online/ ; rm *.7z
 cp -Rp ./TiberianSun_Online "$WINEPREFIX"/drive_c/
 
 # Removing any existing user data
@@ -87,5 +95,5 @@ if [ "$1" == "stable" ]; then
     ( mkdir -p dist ; mv cnctsun*.AppImage* dist/. ; cd dist ; chmod +x *.AppImage )
 elif [ "$1" == "stablewp" ]; then
     cnctsunswp
-    ( mkdir -p dist ; mv cnctsun*.AppImage* dist/. ; cd dist ; chmod +x *.AppImage ; pkill openbox )
+    ( mkdir -p dist ; mv cnctsun*.AppImage* dist/. ; cd dist ; chmod +x *.AppImage )
 fi
