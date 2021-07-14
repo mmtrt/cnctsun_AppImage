@@ -60,13 +60,14 @@ winetricks -q dotnet20 ; sleep 5
 # Download game updates manually
 for pkgs in CnCNet5Version.txt cncnet5.7z Sounds.7z Language.7z Icons.7z GeoIP.7z ts-spawn.7z TS_Maps.7z TS_Rules.7z TS_CnCNet5ClientBackground.7z System.Data.SQLite.dll.7z hints.7z LAN.7z _Servers.7z ts-voxels.7z ts-config.7z ts-terrain.7z; do
 wget -q "https://downloads.cncnet.org/updates/cncnet5/${pkgs}"
-if [[ $pkgs = "CnCNet5Version.txt" || $pkgs = "_Servers.7z" || $pkgs = "GeoIP.7z" || $pkgs = "TS_CnCNet5ClientBackground.7z" || $pkgs = "hints.7z" ]]; then
+if [[ $pkgs = "CnCNet5Version.txt" ]]; then
+mkdir -p tmp/CnCNet5/Others ; mv $pkgs tmp/CnCNet5/Others
+elif [[ $pkgs = "_Servers.7z" || $pkgs = "GeoIP.7z" || $pkgs = "TS_CnCNet5ClientBackground.7z" || $pkgs = "hints.7z" ]]; then
 7z x -aos "$pkgs" "-otmp/CnCNet5/Others" &>/dev/null
 elif [[ $pkgs = "Icons.7z" || $pkgs = "LAN.7z" || $pkgs = "Language.7z" || $pkgs = "Sounds.7z" ]]; then
 7z x -aos "$pkgs" "-otmp/CnCNet5" &>/dev/null
 elif [[ $pkgs = "cncnet5.7z" ]]; then
-mkdir -p tmp
-7za e "$pkgs" -so > "tmp/cncnet5.exe" &>/dev/null
+7z x "$pkgs" -so > "tmp/cncnet5.exe"
 else
 7z x -aos "$pkgs" "-otmp" &>/dev/null
 fi
