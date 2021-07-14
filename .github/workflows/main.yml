@@ -64,12 +64,12 @@ jobs:
           sudo apt install xinit -y &>/dev/null
           sudo apt install xserver-xorg-core --no-install-recommends --no-install-suggests -y &>/dev/null
           # xauth with complain unless ~/.Xauthority exists
-          sudo touch ~/.Xauthority
+          touch ~/.Xauthority ; sudo touch /root/.Xauthority
           # only this one key is needed for X11 over SSH 
-          sudo xauth generate :99 . trusted 
+          sudo xauth generate :98 . trusted 
           # generate our own key, xauth requires 128 bit hex encoding
-          sudo xauth add ${HOST}:99 . $(xxd -l 16 -p /dev/urandom)
-          sudo nohup startx bash deploy.sh stablewp -- :99
+          sudo xauth add ${HOST}:98 . $(xxd -l 16 -p /dev/urandom)
+          sudo nohup startx bash deploy.sh stablewp -- :98
           # bash deploy.sh stablewp
           # mkdir dist
           # mv cnctsun*.AppImage* dist/.
