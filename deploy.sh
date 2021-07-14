@@ -12,8 +12,6 @@ wget -qc "https://github.com/AppImage/AppImageKit/releases/download/continuous/a
 chmod +x ./appimagetool-x86_64.AppImage
 ./appimagetool-x86_64.AppImage --appimage-extract &>/dev/null
 
-mkdir -p dist
-
 cnctsuns () {
 
 mkdir -p ts-mp/usr ts-mp/winedata ; cp cnctsun.desktop ts-mp ; cp AppRun ts-mp ;
@@ -77,8 +75,8 @@ export ARCH=x86_64; squashfs-root/AppRun -v ./ts-mp -n -u "gh-releases-zsync|mmt
 
 if [ "$1" == "stable" ]; then
     cnctsuns
-    ( mv cnctsun*.AppImage* dist/. ; cd dist ; chmod +x *.AppImage )
+    ( mkdir -p dist ; mv cnctsun*.AppImage* dist/. ; cd dist ; chmod +x *.AppImage )
 elif [ "$1" == "stablewp" ]; then
     cnctsunswp
-    ( mv cnctsun*.AppImage* dist/. ; cd dist ; chmod +x *.AppImage )
+    ( mkdir -p dist ; mv cnctsun*.AppImage* dist/. ; cd dist ; chmod +x *.AppImage )
 fi
