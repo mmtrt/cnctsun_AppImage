@@ -72,6 +72,18 @@ else
 fi
 done
 
+# Download maps updates manually
+mkdir -p "tmp/Maps/Balance-Vet Patch" "tmp/Maps/Popular Mods"
+wget -qO- "https://files.cncnet.org/maps.php?game=ts" > "tmp/CnCNet5/Others/TiberianSunMaps.ini"
+
+for pkgs in $(wget -qO- "https://gist.github.com/mmtrt/449d0f655b0673b55b7723826267e06e/raw/36d5e557cd24b0e750040df7235ce50172e717f1/mapbvt.txt"); do
+(cd "tmp/Maps/Balance-Vet Patch" || exit ; wget -q "https://mapdb.cncnet.org/ts/$pkgs.zip" ; 7z x "$pkgs".zip ; rm "$pkgs".zip)
+done
+
+for pkgs in $(wget -qO- "https://files.cncnet.org/maps.php?game=ts" | awk '/Popular/,EOF' | sed -r '/Training/q;1d' | head -n -3 | cut -d'=' -f1); do
+(cd "tmp/Maps/Popular Mods" || exit ; wget -q "https://mapdb.cncnet.org/ts/$pkgs.zip" ; 7z x "$pkgs".zip ; rm "$pkgs".zip)
+done
+
 cp -Rp tmp/* TiberianSun_Online/ ; rm *.7z
 cp -Rp ./TiberianSun_Online "$WINEPREFIX"/drive_c/
 
