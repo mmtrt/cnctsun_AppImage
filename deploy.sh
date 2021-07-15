@@ -48,7 +48,7 @@ cnctsuns ; rm ./*AppImage*
 
 # Create winetricks & wine cache
 mkdir -p /home/runner/.cache/{wine,winetricks}/{dotnet20,ahk} ; cp dotnetfx.exe /home/runner/.cache/winetricks/dotnet20
-cp -Rp *.msi /home/runner/.cache/wine/ ; cp -Rp AutoHotkey104805_Install.exe /home/runner/.cache/winetricks/ahk
+cp -Rp ./*.msi /home/runner/.cache/wine/ ; cp -Rp AutoHotkey104805_Install.exe /home/runner/.cache/winetricks/ahk
 
 # Create WINEPREFIX
 winetricks -q dotnet20 ; sleep 5
@@ -84,7 +84,7 @@ for pkgs in $(wget -qO- "https://files.cncnet.org/maps.php?game=ts" | awk '/Popu
 (cd "tmp/Maps/Popular Mods" || exit ; wget -q "https://mapdb.cncnet.org/ts/$pkgs.zip" ; 7z x "$pkgs".zip ; rm "$pkgs".zip)
 done
 
-cp -Rp tmp/* TiberianSun_Online/ ; rm *.7z
+cp -Rp tmp/* TiberianSun_Online/ ; rm ./*.7z
 cp -Rp ./TiberianSun_Online "$WINEPREFIX"/drive_c/
 
 # Removing any existing user data
@@ -96,7 +96,7 @@ cp -Rp ./TiberianSun_Online "$WINEPREFIX"/drive_c/
 
 cp -Rp $WINEPREFIX ts-mp/ ; rm -rf $WINEPREFIX ; rm -rf ./ts-mp/winedata
 
-( cd ts-mp ; wget -qO- 'https://gist.github.com/mmtrt/49df9fc50ae567a3d5d89791bdb65d45/raw/19b5f3a08fa3ec1429e989adba1cfe9314cd6b52/cnctsunswp.patch' | patch -p1 )
+( cd ts-mp || exit ; wget -qO- 'https://gist.github.com/mmtrt/49df9fc50ae567a3d5d89791bdb65d45/raw/19b5f3a08fa3ec1429e989adba1cfe9314cd6b52/cnctsunswp.patch' | patch -p1 )
 
 export ARCH=x86_64; squashfs-root/AppRun -v ./ts-mp -n -u "gh-releases-zsync|mmtrt|cnctsun_AppImage|stable-wp|cnctsun*.AppImage.zsync" cnctsun_WP-${ARCH}.AppImage &>/dev/null
 
@@ -104,8 +104,8 @@ export ARCH=x86_64; squashfs-root/AppRun -v ./ts-mp -n -u "gh-releases-zsync|mmt
 
 if [ "$1" == "stable" ]; then
     cnctsuns
-    ( mkdir -p dist ; mv cnctsun*.AppImage* dist/. ; cd dist ; chmod +x *.AppImage )
+    ( mkdir -p dist ; mv cnctsun*.AppImage* dist/. ; cd dist || exit ; chmod +x ./*.AppImage )
 elif [ "$1" == "stablewp" ]; then
     cnctsunswp
-    ( mkdir -p dist ; mv cnctsun*.AppImage* dist/. ; cd dist ; chmod +x *.AppImage )
+    ( mkdir -p dist ; mv cnctsun*.AppImage* dist/. ; cd dist || exit ; chmod +x ./*.AppImage )
 fi
