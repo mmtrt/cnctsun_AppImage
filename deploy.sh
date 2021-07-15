@@ -88,7 +88,7 @@ cp -Rp tmp/* TiberianSun_Online/ ; rm ./*.7z
 cp -Rp ./TiberianSun_Online "$WINEPREFIX"/drive_c/
 
 # Removing any existing user data
-( cd "$WINEPREFIX/drive_c/" ; rm -rf users ; rm windows/temp/* ) || true
+( cd "$WINEPREFIX/drive_c/" ; rm -rf users ) || true
 
 # Pre patching dpi setting in WINEPREFIX & Pre patching to disable winemenubuilder
 # DPI dword value 240=f0 180=b4 120=78 110=6e 96=60
