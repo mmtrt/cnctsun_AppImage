@@ -3,14 +3,14 @@
 cnctsuns () {
 
 # Convert and copy icon which is needed for desktop integration into place:
-wget -q https://github.com/mmtrt/cnctsun/raw/master/snap/gui/cnctsun.png &>/dev/null
+wget -q https://github.com/mmtrt/cnctsun/raw/master/snap/gui/cnctsun.png
 for width in 8 16 22 24 32 36 42 48 64 72 96 128 192 256; do
     dir=icons/hicolor/${width}x${width}/apps
     mkdir -p $dir
     convert cnctsun.png -resize ${width}x${width} $dir/cnctsun.png
 done
 
-wget -qc "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
+wget -q "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
 chmod +x ./appimagetool-x86_64.AppImage
 ./appimagetool-x86_64.AppImage --appimage-extract &>/dev/null
 
@@ -49,7 +49,7 @@ cp -Rp ./*.msi /home/runner/.cache/wine/ ; cp -Rp AutoHotkey104805_Install.exe /
 ./wine-stable.AppImage winetricks -q dotnet20 ; sleep 5
 
 # Install game
-( ./wine-stable.AppImage wine TiberianSun_Online_Installer.exe /silent ; sleep 10 ; wineserver -k)
+( ./wine-stable.AppImage wine TiberianSun_Online_Installer.exe /silent ; sleep 5 )
 
 # Download game updates manually
 for pkgs in CnCNet5Version.txt cncnet5.7z Sounds.7z Language.7z Icons.7z GeoIP.7z ts-spawn.7z TS_Maps.7z TS_Rules.7z TS_CnCNet5ClientBackground.7z System.Data.SQLite.dll.7z hints.7z LAN.7z _Servers.7z ts-voxels.7z ts-config.7z ts-terrain.7z; do
