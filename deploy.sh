@@ -71,7 +71,7 @@ done
 mkdir -p "tmp/Maps/Balance-Vet Patch" "tmp/Maps/Popular Mods"
 wget -qO- "https://files.cncnet.org/maps.php?game=ts" > "tmp/CnCNet5/Others/TiberianSunMaps.ini"
 
-for pkgs in $(wget -qO- "https://gist.github.com/mmtrt/449d0f655b0673b55b7723826267e06e/raw/36d5e557cd24b0e750040df7235ce50172e717f1/mapbvt.txt"); do
+for pkgs in $(wget -qO- "https://files.cncnet.org/maps.php?game=ts" | awk '/Balance-Vet/,EOF' | sed -r '/Popular Mods/q;1d' | head -n -1 | cut -d'=' -f1); do
 ( cd "tmp/Maps/Balance-Vet Patch" || exit ; wget -q "https://mapdb.cncnet.org/ts/$pkgs.zip" ; 7z x "$pkgs".zip &>/dev/null ; rm "$pkgs".zip )
 done
 
