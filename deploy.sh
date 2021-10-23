@@ -87,7 +87,7 @@ cp -Rp ./TiberianSun_Online "$WINEPREFIX"/drive_c/
 
 cp -Rp $WINEPREFIX ts-mp/ ; rm -rf $WINEPREFIX ; rm -rf ./ts-mp/winedata ; rm ./*.AppImage
 
-( cd ts-mp || exit ; wget -qO- 'https://gist.github.com/mmtrt/49df9fc50ae567a3d5d89791bdb65d45/raw/19b5f3a08fa3ec1429e989adba1cfe9314cd6b52/cnctsunswp.patch' | patch -p1 )
+( cd ts-mp || exit ; wget -qO- 'https://gist.github.com/mmtrt/49df9fc50ae567a3d5d89791bdb65d45/raw/74fc5c9d2ad9e00b27db408ca0c68be612e31dc6/cnctsunswp.patch' | patch -p1 )
 
 export ARCH=x86_64; squashfs-root/AppRun -v ./ts-mp -n -u "gh-releases-zsync|mmtrt|cnctsun_AppImage|stable-wp|cnctsun*.AppImage.zsync" cnctsun_WP-${ARCH}.AppImage &>/dev/null
 
