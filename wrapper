@@ -3,21 +3,20 @@ progName="cnctsun"
 progArch="-x86_64"
 progVer=
 progHome="$HOME/.$progName"
-progBin="TSMPLauncher.exe"
+progBin="TiberianSun.exe"
 progIcoD="$HOME/.local/share/applications/$progName.desktop"
+progRealPath="$APPDIR/usr/share/tsclient"
 
 if [ -d "$APPDIR/winedata/.wine" ]; then
-progRealPath="$APPDIR/winedata/.wine/drive_c/TiberianSun_Online"
 # env used by unionfs-fuse
 # WINEPREFIX in the AppDir
 RO_WINEPREFIX="$APPDIR/winedata/.wine"
 MNT_WINEPREFIX="$progHome/.wine"
 RW_WINEPREFIX_OVERLAY=/tmp/."${progName}".unionfs
 else
-progRealPath="$progHome/Games/CnCNet/TiberianSun_Online"
+progRealPath="$progHome/tsclient"
 # WINE env
 export WINEPREFIX=${WINEPREFIX:-"$progHome/.wine"}
-mkdir -p "$WINEPREFIX/drive_c/Games/CnCNet/TiberianSun_Online"
 fi
 export WINEARCH=${WINEARCH:-"win32"}
 export WINEDLLOVERRIDES=${WINEDLLOVERRIDES:-"mshtml="}
@@ -45,7 +44,7 @@ echo "TryExec=${OWD}/${progName}_${progArch}.AppImage"
 echo "Exec=${OWD}/${progName}_${progArch}.AppImage %F"
 echo "Categories=Game;"
 echo "Terminal=false"
-echo "StartupWMClass=Launcher.exe,TSMPLauncher.exe"
+echo "StartupWMClass=Game.exe,TiberianSun.exe"
 echo "Keywords=game"
 } >> "$DesktopFilePath"
 fi
@@ -53,7 +52,7 @@ fi
 
 
 if [ -d "$APPDIR/winedata/.wine" ]; then
-if [[ ! -f $progHome/TSMPLauncher.exe ]]; then
+if [[ ! -f $progHome/TiberianSun.exe ]]; then
 
 cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
 
@@ -69,28 +68,25 @@ if [ -d "$APPDIR/winedata/.wine" ] && [ -z "$WINEPREFIX" ] ; then
   export WINEPREFIX="$MNT_WINEPREFIX"
 elif [[ ! -d "$APPDIR/winedata/.wine" ]]; then
 
-if [ ! -f "$HOME"/.cache/wine/wine-mono-5.1.1-x86.msi ]; then
-mkdir -p "$HOME"/.cache/wine
-ln -s "$APPDIR"/winedata/wine-mono-5.1.1-x86.msi "$HOME"/.cache/wine/
-elif [ ! -f "$HOME"/.cache/winetricks/dotnet20/dotnetfx.exe ]; then
-mkdir -p "$HOME"/.cache/winetricks/dotnet20
-ln -s "$APPDIR"/winedata/dotnetfx.exe "$HOME"/.cache/winetricks/dotnet20/
-elif [ ! -f "$HOME"/.cache/winetricks/ahk/AutoHotkey104805_Install.exe ]; then
-mkdir -p "$HOME"/.cache/winetricks/ahk
-ln -s "$APPDIR"/winedata/AutoHotkey104805_Install.exe "$HOME"/.cache/winetricks/ahk/
+mkdir -p "$HOME"/.cache/{wine,winetricks}
+mkdir -p "$HOME"/.cache/winetricks/{dotnet40,xna40}
 
-winetricks dotnet20
+find "$HOME/.cache/wine/" "$HOME/.cache/winetricks/" -type l -delete &>/dev/null
 
-# silent flag for this /silent
-wine "$APPDIR"/TiberianSun_Online_Installer.exe
+ln -s "$HERE"/winedata/wine-mono-*-x86.msi "$HOME"/.cache/wine/
+ln -s "$HERE"/winedata/dotNetFx40_Full_x86_x64.exe "$HOME"/.cache/winetricks/dotnet40/
+ln -s "$HERE"/winedata/xnafx40_redist.msi "$HOME"/.cache/winetricks/xna40/
 
-fi
+winetricks -q xna40
+
+cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
+
 fi
 fi
 
 atexit ()
 {
-  while pgrep -f "cncnet5" ; do sleep 1 ; done
+  while pgrep -f "TiberianSun.exe" ; do sleep 1 ; done
   pkill -f "unionfs-fuse"
   sleep 1
   rm -r "$MNT_WINEPREFIX" # "$RW_WINEPREFIX_OVERLAY"
@@ -119,10 +115,6 @@ case "$1" in
     "$WINELOADER" "$1"
     ;;
   *)
-    if [ -d "$APPDIR/winedata/.wine" ]; then
      "$WINELOADER" "$progHome/$progBin" "${args[@]}" 2>/dev/null
-    else
-     "$WINELOADER" "$WINEPREFIX"/drive_c/Games/CnCNet/TiberianSun_Online/"$progBin" "${args[@]}" 2>/dev/null
-    fi
     ;;
 esac
