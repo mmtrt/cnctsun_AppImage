@@ -2,29 +2,27 @@
 
 cnctsuns () {
 
-# Convert and copy icon which is needed for desktop integration into place:
+# Download icon:
 wget -q https://github.com/mmtrt/cnctsun/raw/master/snap/gui/cnctsun.png
-for width in 8 16 22 24 32 36 42 48 64 72 96 128 192 256; do
-    dir=icons/hicolor/${width}x${width}/apps
-    mkdir -p $dir
-    convert cnctsun.png -resize ${width}x${width} $dir/cnctsun.png
-done
 
-wget -q "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
-chmod +x ./appimagetool-x86_64.AppImage
-./appimagetool-x86_64.AppImage --appimage-extract &>/dev/null
+wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O builder ; chmod +x builder
 
-mkdir -p ts-mp/usr ts-mp/winedata ; cp cnctsun.desktop ts-mp ; cp AppRun ts-mp ;
-cp -r icons ts-mp/usr/share ; cp cnctsun.png ts-mp
+mkdir -p ts-mp/usr/share/icons ts-mp/winedata ; cp cnctsun.desktop ts-mp ; cp wrapper ts-mp ; cp cnctsun.png ts-mp/usr/share/icons
 
-wget -q "https://dl.winehq.org/wine/wine-mono/5.1.1/wine-mono-5.1.1-x86.msi"
+wget -q "https://dl.winehq.org/wine/wine-mono/4.7.5/wine-mono-4.7.5.msi"
 wget -q "https://downloads.cncnet.org/TiberianSun_Online_Installer.exe"
 wget -q "https://download.lenovo.com/ibmdl/pub/pc/pccbbs/thinkvantage_en/dotnetfx.exe"
 wget -q "https://github.com/AutoHotkey/AutoHotkey/releases/download/v1.0.48.05/AutoHotkey104805_Install.exe"
 
 cp -Rp ./*.exe ts-mp/winedata ; cp -Rp ./*.msi ts-mp/winedata
 
-export ARCH=x86_64; squashfs-root/AppRun -v ./ts-mp -u "gh-releases-zsync|mmtrt|cnctsun_AppImage|stable|cnctsun*.AppImage.zsync" cnctsun_${ARCH}.AppImage &>/dev/null
+mkdir -p AppDir/winedata ; cp -r "ts-mp/"* AppDir
+
+NVDV=$(wget "https://launchpad.net/~graphics-drivers/+archive/ubuntu/ppa/+packages?field.name_filter=&field.status_filter=published&field.series_filter=kinetic" -qO- | grep -Eo drivers-.*changes | sed -r "s|_| |g;s|-| |g" | tail -n1 | awk '{print $9}')
+
+sed -i "s|520|$NVDV|" cnctsun.yml
+
+./builder --recipe cnctsun.yml
 
 }
 
@@ -32,24 +30,32 @@ cnctsunswp () {
 
 export WINEDLLOVERRIDES="mshtml="
 export WINEARCH="win32"
-export WINEPREFIX="/home/runner/.wine"
+export WINEPREFIX="/home/runner/work/cnctsun_AppImage/cnctsun_AppImage/AppDir/winedata/.wine"
 export WINEDEBUG="-all"
 
-cnctsuns ; rm ./*AppImage*
+wget -q https://github.com/mmtrt/cnctsun/raw/master/snap/gui/cnctsun.png
 
-WINE_VER="$(wget -qO- https://dl.winehq.org/wine-builds/ubuntu/dists/focal/main/binary-i386/ | grep wine-stable | sed 's|_| |g;s|~| |g' | awk '{print $5}' | tail -n1)"
-wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-stable/wine-stable_${WINE_VER}-x86_64.AppImage
-chmod +x *.AppImage ; mv wine-stable_${WINE_VER}-x86_64.AppImage wine-stable.AppImage
+wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O builder ; chmod +x builder
+
+mkdir -p ts-mp/usr/share/icons ts-mp/winedata ; cp cnctsun.desktop ts-mp ; cp wrapper ts-mp ; cp cnctsun.png ts-mp/usr/share/icons
+
+wget -q "https://dl.winehq.org/wine/wine-mono/4.7.5/wine-mono-4.7.5.msi"
+wget -q "https://downloads.cncnet.org/TiberianSun_Online_Installer.exe"
+wget -q "https://download.lenovo.com/ibmdl/pub/pc/pccbbs/thinkvantage_en/dotnetfx.exe"
+wget -q "https://github.com/AutoHotkey/AutoHotkey/releases/download/v1.0.48.05/AutoHotkey104805_Install.exe"
+
+wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-stable-4-i386/wine-stable-i386_4.0.4-x86_64.AppImage
+chmod +x *.AppImage ; mv wine-stable-i386_4.0.4-x86_64.AppImage wine-stable.AppImage
 
 # Create winetricks & wine cache
 mkdir -p /home/runner/.cache/{wine,winetricks}/{dotnet20,ahk} ; cp dotnetfx.exe /home/runner/.cache/winetricks/dotnet20
-cp -Rp ./*.msi /home/runner/.cache/wine/ ; cp -Rp AutoHotkey104805_Install.exe /home/runner/.cache/winetricks/ahk
+cp -Rp ./*.msi /home/runner/.cache/wine/ ; cp -Rp AutoHotkey104805_Install.exe /home/runner/.cache/winetricks/ahk ; rm wrapper
 
 # Create WINEPREFIX
 ./wine-stable.AppImage winetricks -q dotnet20 ; sleep 5
 
 # Install game
-( ./wine-stable.AppImage wine TiberianSun_Online_Installer.exe /silent ; sleep 5 )
+( ./wine-stable.AppImage TiberianSun_Online_Installer.exe /silent ; sleep 5 )
 
 # Download game updates manually
 for pkgs in CnCNet5Version.txt cncnet5.7z Sounds.7z Language.7z Icons.7z GeoIP.7z ts-spawn.7z TS_Maps.7z TS_Rules.7z TS_CnCNet5ClientBackground.7z System.Data.SQLite.dll.7z hints.7z LAN.7z _Servers.7z ts-voxels.7z ts-config.7z ts-terrain.7z; do
@@ -85,11 +91,19 @@ cp -Rp ./TiberianSun_Online "$WINEPREFIX"/drive_c/
 # Removing any existing user data
 ( cd "$WINEPREFIX/drive_c/" ; rm -rf users ) || true
 
-cp -Rp $WINEPREFIX ts-mp/ ; rm -rf $WINEPREFIX ; rm -rf ./ts-mp/winedata ; rm ./*.AppImage
+echo "disabled" > $WINEPREFIX/.update-timestamp
 
-( cd ts-mp || exit ; wget -qO- 'https://gist.github.com/mmtrt/49df9fc50ae567a3d5d89791bdb65d45/raw/74fc5c9d2ad9e00b27db408ca0c68be612e31dc6/cnctsunswp.patch' | patch -p1 )
+mkdir -p AppDir/winedata ; cp -r "ts-mp/"* AppDir
 
-export ARCH=x86_64; squashfs-root/AppRun -v ./ts-mp -n -u "gh-releases-zsync|mmtrt|cnctsun_AppImage|stable-wp|cnctsun*.AppImage.zsync" cnctsun_WP-${ARCH}.AppImage &>/dev/null
+NVDV=$(wget "https://launchpad.net/~graphics-drivers/+archive/ubuntu/ppa/+packages?field.name_filter=&field.status_filter=published&field.series_filter=kinetic" -qO- | grep -Eo drivers-.*changes | sed -r "s|_| |g;s|-| |g" | tail -n1 | awk '{print $9}')
+
+sed -i "s|520|$NVDV|" cnctsun.yml
+
+sed -i "23s/"1.0"/"1.0_WP"/" cnctsun.yml
+
+sed -i 's/stable|/stable-wp|/' cnctsun.yml
+
+./builder --recipe cnctsun.yml
 
 }
 
