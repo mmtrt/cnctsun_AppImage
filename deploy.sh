@@ -16,7 +16,7 @@ wget -q "https://web.archive.org/web/20120325002813/https://download.microsoft.c
 cp -Rp ./*.exe ts-mp/winedata ; cp -Rp ./*.msi ts-mp/winedata
 sed -i -e 's|progVer=|progVer='"$TS_VERSION"'|g' ts-mp/wrapper
 
-mkdir -p AppDir/winedata ; cp -r "ts-mp/"* AppDir
+mkdir -p AppDir/winedata AppDir/usr/share/tsclient ; cp -r "ts-mp/"* AppDir
 unzip tsclient.zip -d AppDir/usr/share/tsclient
 
 NVDV=$(wget "https://launchpad.net/~graphics-drivers/+archive/ubuntu/ppa/+packages?field.name_filter=&field.status_filter=published&field.series_filter=kinetic" -qO- | grep -Eo drivers-.*changes | sed -r "s|_| |g;s|-| |g" | tail -n1 | awk '{print $9}')
@@ -49,7 +49,7 @@ wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-stab
 chmod +x *.AppImage ; mv wine-stable-i386_4.0.4-x86_64.AppImage wine-stable.AppImage
 
 # Create winetricks & wine cache
-mkdir -p /home/runner/.cache/{wine,winetricks}/{dotnet40,ahk,xna40} ; cp dotNetFx40_Full_x86_x64.exe /home/runner/.cache/winetricks/dotnet40 ; cp xnafx40_redist.msi /home/runner/.cache/winetricks/xna40
+mkdir -p /home/runner/.cache/{wine,winetricks}/{dotnet40,ahk,xna40} AppDir/usr/share/tsclient ; cp dotNetFx40_Full_x86_x64.exe /home/runner/.cache/winetricks/dotnet40 ; cp xnafx40_redist.msi /home/runner/.cache/winetricks/xna40
 cp -Rp ./wine*.msi /home/runner/.cache/wine/ ; rm wrapper
 
 # Create WINEPREFIX
