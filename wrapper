@@ -3,7 +3,7 @@ progName="cnctsun"
 progArch="-x86_64"
 progVer=
 progHome="$HOME/.$progName"
-progBin="TiberianSun.exe"
+progBin="clientxna.exe"
 progIcoD="$HOME/.local/share/applications/$progName.desktop"
 progRealPath="$APPDIR/usr/share/tsclient"
 
@@ -44,7 +44,7 @@ echo "TryExec=${OWD}/${progName}_${progArch}.AppImage"
 echo "Exec=${OWD}/${progName}_${progArch}.AppImage %F"
 echo "Categories=Game;"
 echo "Terminal=false"
-echo "StartupWMClass=Game.exe,TiberianSun.exe"
+echo "StartupWMClass=Game.exe,TiberianSun.exe,clientxna.exe"
 echo "Keywords=game"
 } >> "$DesktopFilePath"
 fi
@@ -86,7 +86,7 @@ fi
 
 atexit ()
 {
-  while pgrep -f "TiberianSun.exe" ; do sleep 1 ; done
+  while pgrep -f "clientxna" ; do sleep 1 ; done
   pkill -f "unionfs-fuse"
   sleep 1
   rm -r "$MNT_WINEPREFIX" # "$RW_WINEPREFIX_OVERLAY"
@@ -115,6 +115,6 @@ case "$1" in
     "$WINELOADER" "$1"
     ;;
   *)
-     "$WINELOADER" "$progHome/$progBin" "${args[@]}" 2>/dev/null
+     "$WINELOADER" "$progHome/Resources/$progBin" "${args[@]}" 2>/dev/null
     ;;
 esac
