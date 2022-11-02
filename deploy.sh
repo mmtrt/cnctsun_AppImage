@@ -11,7 +11,6 @@ TS_VERSION=6.$(wget -q -O- https://www.moddb.com/mods/tiberian-sun-client/downlo
 wget -q "https://dl.winehq.org/wine/wine-mono/4.7.5/wine-mono-4.7.5.msi"
 wget -q $(wget -q -O- https://www.moddb.com/downloads/"$(wget -q -O- "https://www.moddb.com/mods/tiberian-sun-client/downloads/tiberian-sun-client-600" |grep -Eo "/start/.*" | cut -d'"' -f1)" | grep -Eo https.* | grep mirror | cut -d'"' -f1) -O tsclient.zip
 wget -q "https://download.microsoft.com/download/9/5/A/95A9616B-7A37-4AF6-BC36-D6EA96C8DAAE/dotNetFx40_Full_x86_x64.exe"
-wget -q "https://download.microsoft.com/download/b/a/4/ba4a7e71-2906-4b2d-a0e1-80cf16844f5f/dotnetfx45_full_x86_x64.exe"
 wget -q "https://web.archive.org/web/20120325002813/https://download.microsoft.com/download/A/C/2/AC2C903B-E6E8-42C2-9FD7-BEBAC362A930/xnafx40_redist.msi"
 
 cp -Rp ./*.exe ts-mp/winedata ; cp -Rp ./*.msi ts-mp/winedata
@@ -44,18 +43,17 @@ TS_VERSION=6.$(wget -q -O- https://www.moddb.com/mods/tiberian-sun-client/downlo
 wget -q "https://dl.winehq.org/wine/wine-mono/4.7.5/wine-mono-4.7.5.msi"
 wget -q $(wget -q -O- https://www.moddb.com/downloads/"$(wget -q -O- "https://www.moddb.com/mods/tiberian-sun-client/downloads/tiberian-sun-client-600" |grep -Eo "/start/.*" | cut -d'"' -f1)" | grep -Eo https.* | grep mirror | cut -d'"' -f1) -O tsclient.zip
 wget -q "https://download.microsoft.com/download/9/5/A/95A9616B-7A37-4AF6-BC36-D6EA96C8DAAE/dotNetFx40_Full_x86_x64.exe"
-wget -q "https://download.microsoft.com/download/b/a/4/ba4a7e71-2906-4b2d-a0e1-80cf16844f5f/dotnetfx45_full_x86_x64.exe"
 wget -q "https://web.archive.org/web/20120325002813/https://download.microsoft.com/download/A/C/2/AC2C903B-E6E8-42C2-9FD7-BEBAC362A930/xnafx40_redist.msi"
 
 wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-stable-4-i386/wine-stable-i386_4.0.4-x86_64.AppImage
 chmod +x *.AppImage ; mv wine-stable-i386_4.0.4-x86_64.AppImage wine-stable.AppImage
 
 # Create winetricks & wine cache
-mkdir -p /home/runner/.cache/{wine,winetricks}/{dotnet40,dotnet45,ahk,xna40} AppDir/usr/share/tsclient ; cp dotNetFx40_Full_x86_x64.exe /home/runner/.cache/winetricks/dotnet40 ; cp dotnetfx45_full_x86_x64.exe /home/runner/.cache/winetricks/dotnet45 ; cp xnafx40_redist.msi /home/runner/.cache/winetricks/xna40
+mkdir -p /home/runner/.cache/{wine,winetricks}/{dotnet40,ahk,xna40} AppDir/usr/share/tsclient ; cp dotNetFx40_Full_x86_x64.exe /home/runner/.cache/winetricks/dotnet40 ; cp xnafx40_redist.msi /home/runner/.cache/winetricks/xna40
 cp -Rp ./wine*.msi /home/runner/.cache/wine/ ; rm wrapper
 
 # Create WINEPREFIX
-./wine-stable.AppImage winetricks -q xna40 dotnet45 ; sleep 5
+./wine-stable.AppImage winetricks -q xna40 ; sleep 5
 
 unzip tsclient.zip -d AppDir/usr/share/tsclient
 
