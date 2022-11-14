@@ -82,7 +82,7 @@ jobs:
       - name: release
         uses: marvinpinto/action-automatic-releases@latest
         with:
-          title: cnctsun stable
+          title: cnctsun stable v6
           automatic_release_tag: stable-v6
           prerelease: false
           draft: false
@@ -102,7 +102,7 @@ jobs:
       - name: release
         uses: marvinpinto/action-automatic-releases@latest
         with:
-          title: cnctsun stable with wineprefix
+          title: cnctsun stable v6 with wineprefix
           automatic_release_tag: stable-wp-v6
           prerelease: false
           draft: false
