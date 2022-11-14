@@ -19,9 +19,9 @@ sed -i -e 's|progVer=|progVer='"$TS_VERSION"'|g' ts-mp/wrapper
 mkdir -p AppDir/winedata AppDir/usr/share/tsclient ; cp -r "ts-mp/"* AppDir
 unzip tsclient.zip -d AppDir/usr/share/tsclient
 
-NVDV=$(wget "https://launchpad.net/~graphics-drivers/+archive/ubuntu/ppa/+packages?field.name_filter=&field.status_filter=published&field.series_filter=kinetic" -qO- | grep -Eo drivers-.*changes | sed -r "s|_| |g;s|-| |g" | tail -n1 | awk '{print $9}')
+# NVDV=$(wget "https://launchpad.net/~graphics-drivers/+archive/ubuntu/ppa/+packages?field.name_filter=&field.status_filter=published&field.series_filter=kinetic" -qO- | grep -Eo drivers-.*changes | sed -r "s|_| |g;s|-| |g" | tail -n1 | awk '{print $9}')
 
-sed -i "s|520|$NVDV|" cnctsun.yml
+# sed -i "s|520|$NVDV|" cnctsun.yml
 
 ./builder --recipe cnctsun.yml
 
@@ -62,13 +62,13 @@ unzip tsclient.zip -d AppDir/usr/share/tsclient
 
 echo "disabled" > $WINEPREFIX/.update-timestamp ; cp -r "ts-mp/"* AppDir
 
-NVDV=$(wget "https://launchpad.net/~graphics-drivers/+archive/ubuntu/ppa/+packages?field.name_filter=&field.status_filter=published&field.series_filter=kinetic" -qO- | grep -Eo drivers-.*changes | sed -r "s|_| |g;s|-| |g" | tail -n1 | awk '{print $9}')
+# NVDV=$(wget "https://launchpad.net/~graphics-drivers/+archive/ubuntu/ppa/+packages?field.name_filter=&field.status_filter=published&field.series_filter=kinetic" -qO- | grep -Eo drivers-.*changes | sed -r "s|_| |g;s|-| |g" | tail -n1 | awk '{print $9}')
 
-sed -i "s|520|$NVDV|" cnctsun.yml
+# sed -i "s|520|$NVDV|" cnctsun.yml
 
 sed -i -e 's|progVer=|progVer='"${TS_VERSION}_WP"'|g' AppDir/wrapper
 
-sed -i 's/stable|/stable-wp|/' cnctsun.yml
+sed -i 's/stable-v6|/stable-wp-v6|/' cnctsun.yml
 
 ./builder --recipe cnctsun.yml
 
