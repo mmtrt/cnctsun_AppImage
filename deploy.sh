@@ -99,7 +99,7 @@ mkdir -p AppDir/winedata ; cp -r "ts-mp/"* AppDir
 
 # sed -i "s|520|$NVDV|" cnctsun.yml
 
-sed -i "23s/"1.0"/"1.0_WP"/" cnctsun.yml
+sed -i "17s/"1.0"/"1.0_WP"/" cnctsun.yml
 
 sed -i 's/stable|/stable-wp|/' cnctsun.yml
 
