@@ -128,9 +128,9 @@ case "$1" in
     ;;
   *)
     if [ -d "$APPDIR/winedata/.wine" ]; then
-     "$WINELOADER" "$progHome/$progBin" "${args[@]}" 2>/dev/null
+     "$WINELOADER" "$progHome/$progBin" "${args[@]}"
     else
-     "$WINELOADER" "$WINEPREFIX"/drive_c/Games/CnCNet/TiberianSun_Online/"$progBin" "${args[@]}" 2>/dev/null
+     "$WINELOADER" "$WINEPREFIX"/drive_c/Games/CnCNet/TiberianSun_Online/"$progBin" "${args[@]}"
     fi
     ;;
 esac
