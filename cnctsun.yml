@@ -11,8 +11,8 @@ AppDir:
     name: cnctsun
     icon: cnctsun
     version: !ENV ${TS_VER}
-    exec: bin/bash
-    exec_args: wrapper $@
+    exec: AppRun
+    exec_args: $@
 
   apt:
     arch: [amd64, i386]
