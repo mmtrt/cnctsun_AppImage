@@ -2,7 +2,7 @@
 progName="cnctsun"
 progArch="-x86_64"
 progVer=
-progHome="$HOME/.$progName"
+progHome="$HOME/.$progName-v6"
 progBin="clientxna.exe"
 progIcoD="$HOME/.local/share/applications/$progName.desktop"
 progRealPath="$APPDIR/usr/share/tsclient"
