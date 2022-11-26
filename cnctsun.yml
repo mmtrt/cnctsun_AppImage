@@ -65,6 +65,7 @@ AppDir:
       - libglvnd0:i386
       - libglx0:i386
       - libglx-mesa0:i386
+      - libmpg123-0:i386
       - mesa-vdpau-drivers:i386
       - mesa-va-drivers:i386
       - mesa-vulkan-drivers:i386
@@ -171,7 +172,7 @@ AppDir:
 
   runtime:
     env:
-      LIBGL_DRIVERS_PATH: '${APPDIR}/usr/lib/i386-linux-gnu/dri:${LIBGL_DRIVERS_PATH}'
+      LIBGL_DRIVERS_PATH: '${APPDIR}/usr/lib/i386-linux-gnu/dri:${APPDIR}/usr/lib/x86_64-linux-gnu/dri:${LIBGL_DRIVERS_PATH}'
 
 AppImage:
   update-information: gh-releases-zsync|mmtrt|cnctsun_AppImage|stable-v6|cnctsun*.AppImage.zsync
