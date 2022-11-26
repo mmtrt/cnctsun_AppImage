@@ -81,6 +81,10 @@ if [ -d "$APPDIR/winedata/.wine" ]; then
 
     winetricks -q xna40 vcrun2010
 
+    # Add dlloverrides for Game.exe TiberianSun.exe
+    "$WINELOADER" REG ADD HKCU\\Software\\Wine\\AppDefaults\\Game.exe\\DllOverrides /v *ddraw /t REG_SZ /d native,builtin
+    "$WINELOADER" REG ADD HKCU\\Software\\Wine\\AppDefaults\\TiberianSun.exe\\DllOverrides /v *ddraw /t REG_SZ /d native,builtin
+
     cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
 
   fi
