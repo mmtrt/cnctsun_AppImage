@@ -9,7 +9,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.PAT }}
     - name: get-latest-version
       run: |
         VERSION="6.$(wget -q -O- https://www.moddb.com/mods/tiberian-sun-client/downloads/tiberian-sun-client-600 | grep TS_Client | cut -d'.' -f2)"
