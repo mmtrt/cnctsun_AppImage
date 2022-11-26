@@ -57,6 +57,10 @@ mkdir -p "$WINEPREFIX/drive_c/windows/assembly"
 
 unzip tsclient.zip -d AppDir/usr/share/tsclient
 
+# Add dlloverrides for Game.exe TiberianSun.exe
+./wine-stable.AppImage REG ADD HKCU\\Software\\Wine\\AppDefaults\\Game.exe\\DllOverrides /v *ddraw /t REG_SZ /d native,builtin
+./wine-stable.AppImage REG ADD HKCU\\Software\\Wine\\AppDefaults\\TiberianSun.exe\\DllOverrides /v *ddraw /t REG_SZ /d native,builtin
+
 # Removing any existing user data
 ( cd "$WINEPREFIX/drive_c/" ; rm -rf users ) || true
 
