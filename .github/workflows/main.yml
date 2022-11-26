@@ -9,10 +9,10 @@ on:
   #   - cron: "0 0 */3 * *"
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ v6 ]
+    branches: [ testing ]
     paths-ignore: [ '**/README.md' ]
   pull_request:
-    branches: [ v6 ]
+    branches: [ testing ]
     paths-ignore: [ '**/README.md' ]
 
   # Allows you to run this workflow manually from the Actions tab
@@ -82,8 +82,8 @@ jobs:
       - name: release
         uses: marvinpinto/action-automatic-releases@latest
         with:
-          title: cnctsun stable v6
-          automatic_release_tag: stable-v6
+          title: cnctsun stable testing
+          automatic_release_tag: stable-testing
           prerelease: false
           draft: false
           files: |
@@ -102,8 +102,8 @@ jobs:
       - name: release
         uses: marvinpinto/action-automatic-releases@latest
         with:
-          title: cnctsun stable v6 with wineprefix
-          automatic_release_tag: stable-wp-v6
+          title: cnctsun stable testing with wineprefix
+          automatic_release_tag: stable-wp-testing
           prerelease: false
           draft: false
           files: |

@@ -51,6 +51,42 @@ echo "Keywords=game"
 fi
 }
 
+# check for wine appimage
+wine_file=$(find "$HOME"/Downloads "$HOME"/bin "$HOME"/.local/bin -type f \( -name '*.appimage' -o -name '*.AppImage' \) 2>/dev/null | grep -e "wine-stable" -e 'Wine-stable' | head -n 1)
+
+if [[ -f $wine_file ]]; then
+
+# Calling binary files from other AppImage having $ARGV0
+
+export winecmd=$wine_file
+
+function wine {
+  $winecmd wine "$@"
+}
+
+function wineserver {
+  $winecmd wineserver "$@"
+}
+
+function winetricks {
+  $winecmd winetricks -q "$@"
+}
+
+else
+echo "wine-stable appimage is missing can not run cnctsun"
+echo ""
+echo "Download wine-stable*.appimage from https://github.com/mmtrt/WINE_AppImage/releases"
+echo ""
+echo "Then"
+echo ""
+echo "chmod +x wine-stable*.AppImage"
+echo ""
+echo "Also make sure you have single copy of wine-stable appimage present these locations"
+echo ""
+echo "$HOME/Downloads ; $HOME/bin ; $HOME/.local/bin"
+exit 1
+fi
+
 
 if [ -d "$APPDIR/winedata/.wine" ]; then
   if [[ ! -f $progHome/TiberianSun.exe ]]; then
@@ -82,8 +118,8 @@ if [ -d "$APPDIR/winedata/.wine" ]; then
     winetricks -q xna40 vcrun2010
 
     # Add dlloverrides for Game.exe TiberianSun.exe
-    "$WINELOADER" REG ADD HKCU\\Software\\Wine\\AppDefaults\\Game.exe\\DllOverrides /v *ddraw /t REG_SZ /d native,builtin
-    "$WINELOADER" REG ADD HKCU\\Software\\Wine\\AppDefaults\\TiberianSun.exe\\DllOverrides /v *ddraw /t REG_SZ /d native,builtin
+    wine REG ADD HKCU\\Software\\Wine\\AppDefaults\\Game.exe\\DllOverrides /v *ddraw /t REG_SZ /d native,builtin
+    wine REG ADD HKCU\\Software\\Wine\\AppDefaults\\TiberianSun.exe\\DllOverrides /v *ddraw /t REG_SZ /d native,builtin
 
     cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
 
@@ -123,16 +159,16 @@ case "$1" in
     winetricks "$2" "$3"
     ;;
   "msiexec"|"notepad"|"regedit"|"regsvr32"|"wineboot"|"winecfg"|"wineconsole"|"winedbg"|"winefile"|"winemine"|"winepath")
-    "$WINELOADER" "$1"
+    wine "$1"
     ;;
   "eglinfo"|"es2_info"|"es2gears_wayland"|"es2gears_x11"|"es2tri"|"glxinfo"|"glxheads"|"glxgears"|"glxdemo"|"vulkaninfo")
-    "$@"
+    $winecmd "$@"
     ;;
    "vkcube"|"vkcubepp"|"vkcube-wayland")
     export VK_INSTANCE_LAYERS="VK_LAYER_MESA_overlay"
-    "$@"
+    $winecmd "$@"
     ;;
   *)
-     "$WINELOADER" "$progHome/Resources/$progBin" "${args[@]}"
+     wine "$progHome/Resources/$progBin" "${args[@]}"
     ;;
 esac
