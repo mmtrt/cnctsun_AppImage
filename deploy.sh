@@ -28,6 +28,7 @@ sed -i -e 's|progVer=|progVer='"$TS_VERSION"'|g' ts-mp/wrapper
 
 mkdir -p AppDir/winedata AppDir/usr/share/tsclient ; cp -r "ts-mp/"* AppDir
 unzip tsclient.zip -d AppDir/usr/share/tsclient
+( cd AppDir/usr/share/tsclient ; mv "Tiberian Sun Client"/* . ; rmdir "Tiberian Sun Client" )
 
 # NVDV=$(wget "https://launchpad.net/~graphics-drivers/+archive/ubuntu/ppa/+packages?field.name_filter=&field.status_filter=published&field.series_filter=kinetic" -qO- | grep -Eo drivers-.*changes | sed -r "s|_| |g;s|-| |g" | tail -n1 | awk '{print $9}')
 
@@ -54,7 +55,7 @@ wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/mksquashfs" -
 rm builder ; sed -i 's|xz|zstd|' squashfs-root/usr/lib/python3.8/site-packages/appimagebuilder/modules/prime/appimage_primer.py
 
 # Add static appimage runtime
-mkdir -p appimage-build/prime AppDir/winedata
+mkdir -p appimage-build/prime AppDir/winedata AppDir/usr/share/tsclient
 wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/runtime-x86_64" -O appimage-build/prime/runtime-x86_64
 
 mkdir -p ts-mp/usr/share/icons ts-mp/winedata ; cp cnctsun.desktop ts-mp ; cp wrapper ts-mp ; cp cnctsun.png ts-mp/usr/share/icons
@@ -76,6 +77,7 @@ rm wrapper
 sleep 2 ; pkill winecfg
 
 unzip tsclient.zip -d AppDir/usr/share/tsclient
+( cd AppDir/usr/share/tsclient ; mv "Tiberian Sun Client"/* . ; rmdir "Tiberian Sun Client" )
 
 # Add dlloverrides for Game.exe TiberianSun.exe
 ./wine-stable.AppImage REG ADD HKCU\\Software\\Wine\\AppDefaults\\Game.exe\\DllOverrides /v *ddraw /t REG_SZ /d native,builtin

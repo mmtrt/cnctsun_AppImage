@@ -8,7 +8,7 @@ AppDir:
   runtime:
       preserve:
           - winedata
-	  - usr/share/tsclient
+          - usr/share/tsclient
 
   app_info:
     id: cnctsun
