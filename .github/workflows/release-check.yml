@@ -14,7 +14,7 @@ jobs:
         token: ${{ secrets.PAT }}
     - name: get-latest-version
       run: |
-        VERSION="6.$(wget -q -O- https://www.moddb.com/mods/tiberian-sun-client/downloads/tiberian-sun-client-600 | grep TS_Client | cut -d'.' -f2)"
+        VERSION="7.$(wget -q -O- https://www.moddb.com/mods/tiberian-sun-client/downloads/tslient70 | grep TSClient | cut -d'.' -f2)"
         last=$(tail -n1 .build | awk '{print $4}')
 
         if [ "$last" != "$VERSION" ]; then
