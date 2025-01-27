@@ -73,8 +73,7 @@ chmod +x *.AppImage ; cp wine-stable.AppImage ts-mp/winedata/
 rm wrapper
 
 # Create WINEPREFIX
-./wine-stable.AppImage winecfg &
-sleep 2 ; pkill winecfg
+./wine-stable.AppImage wineboot -i ; sleep 5
 
 unzip tsclient.zip -d AppDir/usr/share/tsclient
 ( cd AppDir/usr/share/tsclient ; mv "Tiberian Sun Client"/* . ; rmdir "Tiberian Sun Client" )

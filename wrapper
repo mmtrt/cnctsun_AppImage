@@ -71,7 +71,7 @@ if [ -d "$APPDIR/winedata/.wine" ] && [ -z "$WINEPREFIX" ] ; then
   export WINEPREFIX="$MNT_WINEPREFIX"
 elif [[ ! -d "$WINEPREFIX" ]]; then
 
-  "$WINELOADER" wineboot
+  "$WINELOADER" wineboot -i
 
   # Add dlloverrides for Game.exe TiberianSun.exe
   "$WINELOADER" REG ADD HKCU\\Software\\Wine\\AppDefaults\\Game.exe\\DllOverrides /v *ddraw /t REG_SZ /d native,builtin
