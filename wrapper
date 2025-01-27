@@ -52,12 +52,12 @@ echo "Keywords=game"
 fi
 }
 
+cp "$APPDIR"/winedata/wine-ts.sh "$progHome"/
+sed -i "s| bin|/bin|;s|x.xx|$progVer|" "$progHome"/wine-ts.sh
 
 if [[ ! -f $progHome/TiberianSun.exe ]] && [[ -d "$APPDIR/winedata/.wine" ]]; then
 
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
-  sed -i 's| bin|/bin|' "$progHome"/wine-ts.sh
-  sed -i "s|wine|${OWD}/${progName}-${progVer}${progArch}.AppImage|" "$progHome"/wine-ts.sh
 
 fi
 
@@ -78,8 +78,6 @@ elif [[ ! -d "$WINEPREFIX" ]]; then
   "$WINELOADER" REG ADD HKCU\\Software\\Wine\\AppDefaults\\TiberianSun.exe\\DllOverrides /v *ddraw /t REG_SZ /d native,builtin
 
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
-  sed -i 's| bin|/bin|' "$progHome"/wine-ts.sh
-  sed -i "s|wine|${OWD}/${progName}-${progVer}${progArch}.AppImage|" "$progHome"/wine-ts.sh
 fi
 
 
