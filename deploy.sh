@@ -79,7 +79,7 @@ unzip tsclient.zip -d AppDir/usr/share/tsclient
 ( cd AppDir/usr/share/tsclient ; mv "Tiberian Sun Client"/* . ; rmdir "Tiberian Sun Client" ; rm wine-ts.sh )
 
 # Add dlloverrides for Game.exe TiberianSun.exe
-./wine-stable.AppImage REG ADD HKCU\\Software\\Wine\\AppDefaults\\Game.exe\\DllOverrides /v *ddraw /t REG_SZ /d native,builtin
+./wine-stable.AppImage REG ADD HKCU\\Software\\Wine\\AppDefaults\\game.exe\\DllOverrides /v *ddraw /t REG_SZ /d native,builtin
 ./wine-stable.AppImage REG ADD HKCU\\Software\\Wine\\AppDefaults\\TiberianSun.exe\\DllOverrides /v *ddraw /t REG_SZ /d native,builtin
 
 # Removing any existing user data
