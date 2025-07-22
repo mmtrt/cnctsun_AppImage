@@ -32,7 +32,7 @@ jobs:
 
       # Set TS_VER
       - name: Run version script
-        run: echo "TS_VER=7.$(wget -q -O- https://www.moddb.com/mods/tiberian-sun-client/downloads/tsclient70 | grep TSClient | cut -d'.' -f2)" >> $GITHUB_ENV
+        run: echo "TS_VER=7.$(wget --user-agent='Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0' -q -O- https://www.moddb.com/mods/tiberian-sun-client/downloads/tsclient70 | grep TS_Client | cut -d'.' -f2)" >> $GITHUB_ENV
 
       # Runs a set of commands using the runners shell
       - name: Run a single-line script
@@ -58,7 +58,7 @@ jobs:
 
       # Set TS_VER
       - name: Run version script
-        run: echo "TS_VER=7.$(wget -q -O- https://www.moddb.com/mods/tiberian-sun-client/downloads/tsclient70 | grep TSClient | cut -d'.' -f2)_WP" >> $GITHUB_ENV
+        run: echo "TS_VER=7.$(wget --user-agent='Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0' -q -O- https://www.moddb.com/mods/tiberian-sun-client/downloads/tsclient70 | grep TS_Client | cut -d'.' -f2)_WP" >> $GITHUB_ENV
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
