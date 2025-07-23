@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=cnctsun
+Comment=
+Exec=AppRun
+Icon=cnctsun
+Categories=Game;
+Terminal=false
+StartupWMClass=Launcher.exe,TSMPLauncher.exe
+Keywords=game

@@ -1,0 +1,130 @@
+# APP env
+progName="cnctsun"
+progArch="-x86_64"
+progVer=
+progHome="$HOME/.$progName"
+progUGL="$progHome/Resources/BinariesNET8/UniversalGL"
+progBin="$progUGL/clientogl.dll"
+progEXE="game.exe"
+progIcoD="$HOME/.local/share/applications/$progName.desktop"
+
+if [ -d "$APPDIR/winedata/.wine" ]; then
+  progRealPath="$APPDIR/usr/share/tsclient"
+  # env used by unionfs-fuse
+  # WINEPREFIX in the AppDir
+  RO_WINEPREFIX="$APPDIR/winedata/.wine"
+  RW_WINEPREFIX="$progHome/.wine"
+  MNT_WINEPREFIX=/tmp/."${progName}".unionfs
+else
+  progRealPath="$APPDIR/usr/share/tsclient"
+  # WINE env
+  export WINEPREFIX=${WINEPREFIX:-"$progHome/.wine"}
+fi
+export WINEDLLOVERRIDES=${WINEDLLOVERRIDES:-"mscoree,mshtml="}
+export WINEDEBUG=${WINEDEBUG:-"fixme-all"}
+export WINELOADER=${WINELOADER:-"$APPDIR/winedata/./wine-stable.AppImage"}
+
+if [ ! -d "$progHome" ];then
+  mkdir -p "$progHome" || exit 1
+fi
+
+dkico() {
+if [[ ! -f $progIcoD ]]; then
+
+cp -r "$APPDIR"/usr/share/icons "$HOME"/.local/share
+mkdir -p "$HOME/.local/share/applications"
+DesktopFilePath="$HOME/.local/share/applications/$progName.desktop"
+
+{
+echo "[Desktop Entry]"
+echo "Type=Application"
+echo "Encoding=UTF-8"
+echo "Name=$progName"
+echo "Comment="
+echo "Icon=$progName"
+echo "TryExec=${OWD}/${progName}_${progArch}.AppImage"
+echo "Exec=${OWD}/${progName}_${progArch}.AppImage %F"
+echo "Categories=Game;"
+echo "Terminal=false"
+echo "StartupWMClass=Game.exe,TiberianSun.exe"
+echo "Keywords=game"
+} >> "$DesktopFilePath"
+fi
+}
+
+cp "$APPDIR"/winedata/wine-ts.sh "$progHome"/
+sed -i "s| bin|/bin|;s|x.xx|$progVer|" "$progHome"/wine-ts.sh
+
+if [[ ! -f $progHome/TiberianSun.exe ]] && [[ -d "$APPDIR/winedata/.wine" ]]; then
+
+  cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
+
+fi
+
+# Load bundled WINEPREFIX if existing and if $WINEPREFIX is not set
+if [ -d "$APPDIR/winedata/.wine" ] && [ -z "$WINEPREFIX" ] ; then
+  mkdir -p "$MNT_WINEPREFIX" "$RW_WINEPREFIX"
+  if [ ! -e "$MNT_WINEPREFIX/drive_c" ] ; then
+    unionfs-fuse -o use_ino,uid=$UID -ocow "$RW_WINEPREFIX"=RW:"$RO_WINEPREFIX"=RO "$MNT_WINEPREFIX" || exit 1
+    trap atexit EXIT
+  fi
+  export WINEPREFIX="$MNT_WINEPREFIX"
+elif [[ ! -d "$WINEPREFIX" ]]; then
+
+  "$WINELOADER" wineboot -i
+
+  # Add dlloverrides for game.exe TiberianSun.exe
+  "$WINELOADER" REG ADD HKCU\\Software\\Wine\\AppDefaults\\game.exe\\DllOverrides /v *ddraw /t REG_SZ /d native,builtin
+  "$WINELOADER" REG ADD HKCU\\Software\\Wine\\AppDefaults\\TiberianSun.exe\\DllOverrides /v *ddraw /t REG_SZ /d native,builtin
+
+  cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
+fi
+
+
+atexit ()
+{
+  while pgrep -f "clientogl" ; do sleep 1 ; done
+  kill $(ps -ef | grep $progName.unionfs | awk '{print $2}' | head -1)
+  sleep 1
+  rm -r "$MNT_WINEPREFIX" # "$RW_WINEPREFIX_OVERLAY"
+}
+
+# Passing args to wine apps
+for i; do # for i = for i in "$@"
+    # Add path in Wine form (e.g. "z:/home/user/Desktop/lol.xyz")
+    if [[ -f /${i#?:} ]]; then 
+        args+=("z:${i#?:}")   # When opened through .desktop or Wine path (e.g. z:/*)
+    elif [[ "${i:0:1}" = "-" ]]; then
+        args+=("${i/#-//}")
+    fi
+done
+
+# Launch wineboot/winecfg/winetricks if requested.
+# If the executable exists then launch it.
+case "$1" in
+  "install")
+    dkico
+    ;;
+  "winetricks")
+    winetricks "$2" "$3"
+    ;;
+  "game.exe")
+    "$WINELOADER" "$1" "$2"
+    ;;
+  "clientogl.dll")
+    "$APPDIR"/winedata/./dotnet "${args[@]}"
+    ;;
+  "msiexec"|"notepad"|"regedit"|"regsvr32"|"wineboot"|"winecfg"|"wineconsole"|"winedbg"|"winefile"|"winemine"|"winepath")
+    "$WINELOADER" "$1"
+    ;;
+  "eglinfo"|"es2_info"|"es2gears_wayland"|"es2gears_x11"|"es2tri"|"glxinfo"|"glxheads"|"glxgears"|"glxdemo"|"vulkaninfo")
+    "$WINELOADER" "$@"
+    ;;
+   "vkcube"|"vkcubepp"|"vkcube-wayland")
+    export VK_INSTANCE_LAYERS="VK_LAYER_MESA_overlay"
+    "$WINELOADER" "$@"
+    ;;
+  *)
+    "$APPDIR"/winedata/./dotnet "$progBin" "${args[@]}"
+    ;;
+esac

@@ -1,0 +1,26 @@
+name: check
+
+on:
+  schedule:
+  - cron: "0 */12 * * *"
+
+jobs:
+  new-release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.PAT }}
+    - name: get-latest-version
+      run: |
+        VERSION="7.$(wget --user-agent='Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0' -q -O- https://www.moddb.com/mods/tiberian-sun-client/downloads/tsclient70 | grep TS_Client | cut -d'.' -f2)"
+        last=$(tail -n1 .build | awk '{print $4}')
+
+        if [ "$last" != "$VERSION" ]; then
+          echo "$(date -u --rfc-3339=seconds) Version $VERSION" >> .build
+        fi
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: Trigger build for new version
+        branch: main
