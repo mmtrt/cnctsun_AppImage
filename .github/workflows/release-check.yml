@@ -15,10 +15,14 @@ jobs:
     - name: get-latest-version
       run: |
         VERSION="7.$(wget --user-agent='Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0' -q -O- https://www.moddb.com/mods/tiberian-sun-client/downloads/tsclient70 | grep TS_Client | cut -d'.' -f2)"
+        VERSION_CHECK="$(echo $VERSION | wc -l)"
         last=$(tail -n1 .build | awk '{print $4}')
-
-        if [ "$last" != "$VERSION" ]; then
-          echo "$(date -u --rfc-3339=seconds) Version $VERSION" >> .build
+        if [ "$VERSION_CHECK" -eq 1 ]; then
+         if [ "$last" != "$VERSION" ]; then
+           echo "$(date -u --rfc-3339=seconds) Version $VERSION" >> .build
+         fi
+        else
+         echo "No update released." 
         fi
     - uses: stefanzweifel/git-auto-commit-action@v4
       with:
