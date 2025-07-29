@@ -12,7 +12,7 @@ rm builder ; sed -i 's|xz|zstd|;s|AppImageKit|type2-runtime|' squashfs-root/usr/
 
 mkdir -p AppDir/winedata ts-mp/usr/share/icons ts-mp/winedata ; cp cnctsun.desktop ts-mp ; cp wrapper ts-mp ; cp cnctsun.png ts-mp/usr/share/icons ; cp wine-ts.sh ts-mp/winedata
 
-wget -q "https://github.com/mmtrt/dotnet-runtime_AppImage/releases/download/continuous/dotnet-runtime-$(wget -qO- https://github.com/mmtrt/dotnet-runtime_AppImage/releases/expanded_assets/continuous | grep -Eo me-.* | tail -1 | sed 's|-| |g' | awk '{print $2}')-x86_64.AppImage" -O AppDir/winedata/dotnet ; chmod +x AppDir/winedata/dotnet
+wget -q "https://github.com/mmtrt/dotnet-runtime_AppImage/releases/download/ts-asset/dotnet-runtime-$(wget -qO- https://github.com/mmtrt/dotnet-runtime_AppImage/releases/expanded_assets/continuous | grep -Eo me-.* | tail -1 | sed 's|-| |g' | awk '{print $2}')-x86_64.AppImage" -O AppDir/winedata/dotnet ; chmod +x AppDir/winedata/dotnet
 
 TS_VERSION=7.$(wget --user-agent='Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0' -q -O- https://www.moddb.com/mods/tiberian-sun-client/downloads/tsclient70 | grep TS_Client | cut -d'.' -f2)
 
@@ -53,7 +53,7 @@ rm builder ; sed -i 's|xz|zstd|;s|AppImageKit|type2-runtime|' squashfs-root/usr/
 
 mkdir -p AppDir/winedata AppDir/usr/share/tsclient ts-mp/usr/share/icons ts-mp/winedata ; cp cnctsun.desktop ts-mp ; cp wrapper ts-mp ; cp cnctsun.png ts-mp/usr/share/icons ; cp wine-ts.sh ts-mp/winedata
 
-wget -q "https://github.com/mmtrt/dotnet-runtime_AppImage/releases/download/continuous/dotnet-runtime-$(wget -qO- https://github.com/mmtrt/dotnet-runtime_AppImage/releases/expanded_assets/continuous | grep -Eo me-.* | tail -1 | sed 's|-| |g' | awk '{print $2}')-x86_64.AppImage" -O AppDir/winedata/dotnet ; chmod +x AppDir/winedata/dotnet
+wget -q "https://github.com/mmtrt/dotnet-runtime_AppImage/releases/download/ts-asset/dotnet-runtime-$(wget -qO- https://github.com/mmtrt/dotnet-runtime_AppImage/releases/expanded_assets/continuous | grep -Eo me-.* | tail -1 | sed 's|-| |g' | awk '{print $2}')-x86_64.AppImage" -O AppDir/winedata/dotnet ; chmod +x AppDir/winedata/dotnet
 
 TS_VERSION=7.$(wget --user-agent='Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0' -q -O- https://www.moddb.com/mods/tiberian-sun-client/downloads/tsclient70 | grep TS_Client | cut -d'.' -f2)
 
