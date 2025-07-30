@@ -18,8 +18,8 @@ TS_VERSION=7.$(wget --user-agent='Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Geck
 
 wget --user-agent='Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0' -q $(wget --user-agent='Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0' -q -O- https://www.moddb.com/downloads/"$(wget --user-agent='Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0' -q -O- "https://www.moddb.com/mods/tiberian-sun-client/downloads/tsclient70" |grep -Eo "/start/.*" | cut -d'"' -f1)" | grep -Eo https.* | grep mirror | cut -d'"' -f1) -O tsclient.zip
 
-wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-stable/wine-stable_$(wget -qO- https://github.com/mmtrt/WINE_AppImage/releases/expanded_assets/continuous-stable | grep -Eo 'stable_[0-9].*' | cut -d'_' -f2 | cut -d'-' -f1 | head -1)-x86_64.AppImage -O wine-stable.AppImage
-chmod +x *.AppImage ; cp wine-stable.AppImage ts-mp/winedata/
+wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-devel/wine-devel_$(wget -qO- https://github.com/mmtrt/WINE_AppImage/releases/expanded_assets/continuous-devel | grep -Eo 'devel_[0-9].*' | cut -d'_' -f2 | cut -d'-' -f1 | head -1)-x86_64.AppImage -O wine-devel.AppImage
+chmod +x *.AppImage ; cp wine-devel.AppImage ts-mp/winedata/
 
 sed -i -e 's|progVer=|progVer='"$TS_VERSION"'|g' ts-mp/wrapper
 
@@ -59,21 +59,21 @@ TS_VERSION=7.$(wget --user-agent='Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Geck
 
 wget --user-agent='Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0' -q $(wget --user-agent='Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0' -q -O- https://www.moddb.com/downloads/"$(wget --user-agent='Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0' -q -O- "https://www.moddb.com/mods/tiberian-sun-client/downloads/tsclient70" |grep -Eo "/start/.*" | cut -d'"' -f1)" | grep -Eo https.* | grep mirror | cut -d'"' -f1) -O tsclient.zip
 
-wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-stable/wine-stable_$(wget -qO- https://github.com/mmtrt/WINE_AppImage/releases/expanded_assets/continuous-stable | grep -Eo 'stable_[0-9].*' | cut -d'_' -f2 | cut -d'-' -f1 | head -1)-x86_64.AppImage -O wine-stable.AppImage
-chmod +x *.AppImage ; cp wine-stable.AppImage ts-mp/winedata/
+wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-devel/wine-devel_$(wget -qO- https://github.com/mmtrt/WINE_AppImage/releases/expanded_assets/continuous-devel | grep -Eo 'devel_[0-9].*' | cut -d'_' -f2 | cut -d'-' -f1 | head -1)-x86_64.AppImage -O wine-devel.AppImage
+chmod +x *.AppImage ; cp wine-devel.AppImage ts-mp/winedata/
 
 # Create winetricks & wine cache
 rm wrapper
 
 # Create WINEPREFIX
-./wine-stable.AppImage wineboot -i ; sleep 5
+./wine-devel.AppImage wineboot -i ; sleep 5
 
 unzip tsclient.zip -d AppDir/usr/share/tsclient
 ( cd AppDir/usr/share/tsclient ; mv "Tiberian Sun Client"/* . ; rmdir "Tiberian Sun Client" ; rm wine-ts.sh )
 
 # Add dlloverrides for Game.exe TiberianSun.exe
-./wine-stable.AppImage REG ADD HKCU\\Software\\Wine\\AppDefaults\\game.exe\\DllOverrides /v *ddraw /t REG_SZ /d native,builtin
-./wine-stable.AppImage REG ADD HKCU\\Software\\Wine\\AppDefaults\\TiberianSun.exe\\DllOverrides /v *ddraw /t REG_SZ /d native,builtin
+./wine-devel.AppImage REG ADD HKCU\\Software\\Wine\\AppDefaults\\game.exe\\DllOverrides /v *ddraw /t REG_SZ /d native,builtin
+./wine-devel.AppImage REG ADD HKCU\\Software\\Wine\\AppDefaults\\TiberianSun.exe\\DllOverrides /v *ddraw /t REG_SZ /d native,builtin
 
 # Removing any existing user data
 ( cd "$WINEPREFIX/drive_c/" ; rm -rf users ) || true
