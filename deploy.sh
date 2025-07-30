@@ -48,7 +48,7 @@ chmod +x ./uruntime*
 ./uruntime-lite --appimage-addupdinfo "$UPINFO"
 ./uruntime --appimage-mkdwarfs -f --set-owner 0 --set-group 0 --no-history --no-create-timestamp --compression zstd:level=22 -S26 -B8 --header uruntime-lite -i AppDir -o ./cnctsun-"$VERSION"-"$ARCH".AppImage
 zsyncmake *.AppImage -u *.AppImage
-
+ls -al
 }
 
 cnctsunswp () {
@@ -119,6 +119,7 @@ chmod +x ./uruntime*
 ./uruntime-lite --appimage-addupdinfo "$UPINFO"
 ./uruntime --appimage-mkdwarfs -f --set-owner 0 --set-group 0 --no-history --no-create-timestamp --compression zstd:level=22 -S26 -B8 --header uruntime-lite -i AppDir -o ./cnctsun-"$VERSION"_WP-"$ARCH".AppImage
 zsyncmake *.AppImage -u *.AppImage
+ls -al
 
 }
 
