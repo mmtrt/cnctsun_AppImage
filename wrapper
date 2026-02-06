@@ -60,6 +60,9 @@ sed -i "s| bin|/bin|;s|x.xx|$progVer|" "$progHome"/wine-ts.sh
 if [[ ! -f $progHome/TiberianSun.exe ]] && [[ -d "$APPDIR/winedata/.wine" ]]; then
 
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
+  cp -Rvp "$APPDIR"/winedata/*.sh "$progHome"/
+  sed -i "s| bin|/bin|;s|x.xx|$progVer|" "$progHome"/wine-ts.sh
+  chmod +x "$progHome"/*.sh
 
 fi
 
@@ -71,7 +74,7 @@ if [ -d "$APPDIR/winedata/.wine" ] && [ -z "$WINEPREFIX" ] ; then
     trap atexit EXIT
   fi
   export WINEPREFIX="$MNT_WINEPREFIX"
-elif [[ ! -d "$WINEPREFIX" ]]; then
+elif [ ! -d "$WINEPREFIX" ]; then
 
   "$WINELOADER" wineboot -i
 
@@ -80,8 +83,11 @@ elif [[ ! -d "$WINEPREFIX" ]]; then
   "$WINELOADER" REG ADD HKCU\\Software\\Wine\\AppDefaults\\TiberianSun.exe\\DllOverrides /v *ddraw /t REG_SZ /d native,builtin
 
   cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
-fi
+  cp -Rvp "$APPDIR"/winedata/*.sh "$progHome"/
+  sed -i "s| bin|/bin|;s|x.xx|$progVer|" "$progHome"/wine-ts.sh
+  chmod +x "$progHome"/*.sh
 
+fi
 
 atexit ()
 {
@@ -100,6 +106,18 @@ for i; do # for i = for i in "$@"
         args+=("${i/#-//}")
     fi
 done
+
+if [ -e "$progHome"/version ] && [ -e "$APPDIR"/usr/share/tsclient/version ]; then
+VERSION="$(cat $APPDIR/usr/share/tsclient/version | grep Version= | cut -d'=' -f2)"
+last="$(cat $progHome/version | grep Version= | cut -d'=' -f2)"
+ if [ "$last" != "$VERSION" ]; then
+  echo updating to "$VERSION"
+  cp -Rvp "$progRealPath/"* "$progHome"/ &>/dev/null
+  cp -Rvp "$APPDIR"/winedata/*.sh "$progHome"/
+  sed -i 's| bin|/bin|;s|x.xx|$progVer|' "$progHome"/wine-ts.sh
+  chmod +x "$progHome"/*.sh
+ fi
+fi
 
 # Launch wineboot/winecfg/winetricks if requested.
 # If the executable exists then launch it.
