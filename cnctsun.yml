@@ -35,58 +35,45 @@ AppDir:
     exclude:
       - sbin
       - var
-      - etc/alternatives
-      - etc/apt
-      - etc/cron.daily
-      - etc/dpkg
-      - etc/mysql
-      - etc/sane.d
-      - etc/sensors.d
-      - etc/skel
-      - etc/snmp
-      - etc/udev
-      - etc/gss
-      - etc/init.d
-      - etc/logrotate.d
-      - lib/modprobe.d
-      - lib/systemd
-      - lib/udev
-      - usr/lib/mime
-      - usr/lib/sasl2
-      - usr/lib/tmpfiles.d
+      - etc
       - usr/sbin
-      - usr/share/apps
-      - usr/share/man
       - usr/share/doc
-      - usr/share/adduser
-      - usr/share/apport
-      - usr/share/bash-completion
-      - usr/share/bug
-      - usr/share/debconf
-      - usr/share/doc
-      - usr/share/doc-base
-      - usr/share/dpkg
-      - usr/share/glib-2.0
-      - usr/share/gst-plugins-base
-      - usr/share/hal
       - usr/share/info
       - usr/share/initramfs-tools
-      - usr/share/kde4
-      - usr/share/libgphoto2
       - usr/share/lintian
+      - usr/share/man
       - usr/share/menu
-      - usr/share/metainfo
-      - usr/share/mesa-demos
-      - usr/share/mime
-      - usr/share/misc
-      - usr/share/mysql-common
-      - usr/share/pixmaps
-      - usr/share/pkgconfig
-      - usr/share/polkit-1
-      - usr/share/snmp
-      - usr/share/zoneinfo
-      - usr/share/zoneinfo-icu
-      - usr/share/zsh
+
+  after_runtime:
+    # this is executed after the packages and files are added
+    - |
+
+     if [ $(wget -qO- https://github.com/mmtrt/Wine-Builds/releases/expanded_assets/latest | grep -Eo '/wine-[0-9].*xz"' | head -1 | grep -c rc) -gt 0 ]; then
+      WINE_VER="$(wget -qO- https://github.com/mmtrt/Wine-Builds/releases/expanded_assets/latest | grep -Eo '/wine-[0-9].*xz"' | cut -d'-' -f2,3 | head -1)"
+     else
+      WINE_VER="$(wget -qO- https://github.com/mmtrt/Wine-Builds/releases/expanded_assets/latest | grep -Eo '/wine-[0-9].*xz"' | cut -d'-' -f2 | head -1)"
+     fi
+
+     wget -q "https://github.com/mmtrt/Wine-Builds/releases/download/latest/wine-${WINE_VER}-amd64.tar.xz"
+     mkdir -p AppDir/opt ; (cd AppDir/opt ; tar -xf ../../*.tar.xz ; mv wine-* wine-devel)
+
+     # Cleanup
+     rm -rf AppDir/opt/wine-devel/share/{applications,man,doc}
+
+     # Link dotnet exec
+     (cd AppDir/usr/bin; ln -s "../../usr/share/dotnet/dotnet" .)
+
+     # Disable FileOpenAssociations
+     sed -i 's|    LicenseInformation|    LicenseInformation,\\\n    FileOpenAssociations|g;$a \\n[FileOpenAssociations]\nHKCU,Software\\Wine\\FileOpenAssociations,"Enable",,"N"' AppDir/opt/wine-devel/share/wine/wine.inf
+
+     # Disable winemenubuilder
+     sed -i 's|    FileOpenAssociations|    FileOpenAssociations,\\\n    DllOverrides|;$a \\n[DllOverrides]\nHKCU,Software\\Wine\\DllOverrides,"*winemenubuilder.exe",,""' AppDir/opt/wine-devel/share/wine/wine.inf
+     sed -i '/\%11\%\\winemenubuilder.exe -a -r/d' AppDir/opt/wine-devel/share/wine/wine.inf
+
+
+  runtime:
+    path_mappings:
+    - /opt/wine-devel:$APPDIR/opt/wine-devel
 
 AppImage:
   update-information: gh-releases-zsync|mmtrt|cnctsun_AppImage|stable|cnctsun*.AppImage.zsync
