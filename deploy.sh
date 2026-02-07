@@ -2,13 +2,7 @@
 
 cnctsuns () {
 
-wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O builder ; chmod +x builder ; ./builder --appimage-extract &>/dev/null
-
-# add custom mksquashfs
-wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/mksquashfs" -O squashfs-root/usr/bin/mksquashfs
-
-# force zstd format in appimagebuilder for appimages
-rm builder ; sed -i 's|xz|zstd|;s|AppImageKit|type2-runtime|' squashfs-root/usr/lib/python3.8/site-packages/appimagebuilder/modules/prime/appimage_primer.py
+wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O builder ; chmod +x builder ; ./builder --appimage-extract &>/dev/null ; rm builder
 
 mkdir -p temp AppDir/winedata AppDir/usr/share/tsclient ts-mp/usr/share/icons ts-mp/winedata ; cp cnctsun.desktop ts-mp ; cp wrapper ts-mp ; cp cnctsun.png ts-mp/usr/share/icons ; cp wine-ts.sh ts-mp/winedata
 
@@ -32,8 +26,18 @@ unzip tsclient.zip -d AppDir/usr/share/tsclient
 
 chmod +x AppDir/winedata/wine-ts.sh
 
-./squashfs-root/AppRun --recipe cnctsun.yml
+./squashfs-root/AppRun --skip-appimage --recipe cnctsun.yml
 
+export ARCH="$(uname -m)"
+export APPIMAGE_EXTRACT_AND_RUN=1
+export URUNTIME_PRELOAD=0
+UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|stable|*$ARCH.AppImage.zsync"
+VERSION=7.$(wget --user-agent='Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0' -q -O- https://www.moddb.com/mods/tiberian-sun-client/downloads/tsclient70 | grep TS_Client | cut -d'.' -f2)
+
+echo "Generating AppImage..."
+appimagetool --no-appstream -u "$UPINFO" AppDir cnctsun-"$VERSION"-"$ARCH".AppImage
+
+ls -al
 }
 
 cnctsunswp () {
@@ -42,13 +46,7 @@ export WINEDLLOVERRIDES="mscoree,mshtml="
 export WINEPREFIX="/home/runner/work/cnctsun_AppImage/cnctsun_AppImage/AppDir/winedata/.wine"
 export WINEDEBUG="-all"
 
-wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O builder ; chmod +x builder ; ./builder --appimage-extract &>/dev/null
-
-# add custom mksquashfs
-wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/mksquashfs" -O squashfs-root/usr/bin/mksquashfs
-
-# force zstd format in appimagebuilder for appimages
-rm builder ; sed -i 's|xz|zstd|;s|AppImageKit|type2-runtime|' squashfs-root/usr/lib/python3.8/site-packages/appimagebuilder/modules/prime/appimage_primer.py
+wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O builder ; chmod +x builder ; ./builder --appimage-extract &>/dev/null ; rm builder
 
 mkdir -p temp AppDir/winedata AppDir/usr/share/tsclient ts-mp/usr/share/icons ts-mp/winedata ; cp cnctsun.desktop ts-mp ; cp wrapper ts-mp ; cp cnctsun.png ts-mp/usr/share/icons ; cp wine-ts.sh ts-mp/winedata
 
@@ -97,7 +95,18 @@ sed -i -e 's|progVer=|progVer='"${TS_VERSION}_WP"'|g' AppDir/wrapper
 
 sed -i 's/stable|/stable-wp|/' cnctsun.yml
 
-./squashfs-root/AppRun --recipe cnctsun.yml
+./squashfs-root/AppRun --skip-appimage --recipe cnctsun.yml
+
+export ARCH="$(uname -m)"
+export APPIMAGE_EXTRACT_AND_RUN=1
+export URUNTIME_PRELOAD=0
+UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|stable-wp|*$ARCH.AppImage.zsync"
+VERSION=7.$(wget --user-agent='Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0' -q -O- https://www.moddb.com/mods/tiberian-sun-client/downloads/tsclient70 | grep TS_Client | cut -d'.' -f2)
+
+echo "Generating AppImage..."
+appimagetool --no-appstream -u "$UPINFO" AppDir  cnctsun-"$VERSION"_WP-"$ARCH".AppImage
+
+ls -al
 
 }
 
