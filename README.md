@@ -15,7 +15,6 @@
 
 ## Info
  * This AppImage uses [wine-devel_AppImage](https://github.com/mmtrt/WINE_AppImage/releases/tag/continuous-devel) which is included in the AppImage.
- * This AppImage uses [dotnet_runtime_AppImage](https://github.com/mmtrt/dotnet-runtime_AppImage/releases/tag/ts-asset) which is included in the AppImage.
  * This AppImage has two versions one stable only contains required files to install game with all redistributable which takes quite time to first boot as it installs all theses requirements and other one have all these preinstalled inside wineprefix which boots instant.
 
 ## Get Started

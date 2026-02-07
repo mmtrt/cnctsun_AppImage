@@ -10,9 +10,11 @@ wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/mksquashfs" -
 # force zstd format in appimagebuilder for appimages
 rm builder ; sed -i 's|xz|zstd|;s|AppImageKit|type2-runtime|' squashfs-root/usr/lib/python3.8/site-packages/appimagebuilder/modules/prime/appimage_primer.py
 
-mkdir -p AppDir/winedata ts-mp/usr/share/icons ts-mp/winedata ; cp cnctsun.desktop ts-mp ; cp wrapper ts-mp ; cp cnctsun.png ts-mp/usr/share/icons ; cp wine-ts.sh ts-mp/winedata
+mkdir -p temp AppDir/winedata AppDir/usr/share/tsclient ts-mp/usr/share/icons ts-mp/winedata ; cp cnctsun.desktop ts-mp ; cp wrapper ts-mp ; cp cnctsun.png ts-mp/usr/share/icons ; cp wine-ts.sh ts-mp/winedata
 
-wget -q "https://github.com/mmtrt/dotnet-runtime_AppImage/releases/download/ts-asset/dotnet-runtime-$(wget -qO- https://github.com/mmtrt/dotnet-runtime_AppImage/releases/expanded_assets/ts-asset | grep -Eo me-.* | tail -1 | sed 's|-| |g' | awk '{print $2}')-x86_64.AppImage" -O AppDir/winedata/dotnet ; chmod +x AppDir/winedata/dotnet
+wget -q "https://github.com/mmtrt/dotnet-runtime_AppImage/releases/download/continuous/dotnet-runtime-$(wget -qO- https://github.com/mmtrt/dotnet-runtime_AppImage/releases/expanded_assets/continuous | grep -Eo me-.* | tail -1 | sed 's|-| |g' | awk '{print $2}')-x86_64.AppImage" -O temp/dotnet ; chmod +x temp/dotnet
+
+( cd temp ; ./dotnet --appimage-extract &>/dev/null ; cp -R AppDir/usr/share/dotnet ../AppDir/usr/share/ ) || true
 
 TS_VERSION=7.$(wget --user-agent='Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0' -q -O- https://www.moddb.com/mods/tiberian-sun-client/downloads/tsclient70 | grep TS_Client | cut -d'.' -f2)
 
@@ -23,7 +25,7 @@ chmod +x *.AppImage ; cp wine-devel.AppImage ts-mp/winedata/
 
 sed -i -e 's|progVer=|progVer='"$TS_VERSION"'|g' ts-mp/wrapper
 
-mkdir -p AppDir/winedata AppDir/usr/share/tsclient ; cp -r "ts-mp/"* AppDir
+mkdir -p AppDir/winedata ; cp -r "ts-mp/"* AppDir
 unzip tsclient.zip -d AppDir/usr/share/tsclient
 ( cd AppDir/usr/share/tsclient ; mv "Tiberian Sun Client"/* . ; rmdir "Tiberian Sun Client" ; rm wine-ts.sh )
 
@@ -51,9 +53,11 @@ wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/mksquashfs" -
 # force zstd format in appimagebuilder for appimages
 rm builder ; sed -i 's|xz|zstd|;s|AppImageKit|type2-runtime|' squashfs-root/usr/lib/python3.8/site-packages/appimagebuilder/modules/prime/appimage_primer.py
 
-mkdir -p AppDir/winedata AppDir/usr/share/tsclient ts-mp/usr/share/icons ts-mp/winedata ; cp cnctsun.desktop ts-mp ; cp wrapper ts-mp ; cp cnctsun.png ts-mp/usr/share/icons ; cp wine-ts.sh ts-mp/winedata
+mkdir -p temp AppDir/winedata AppDir/usr/share/tsclient ts-mp/usr/share/icons ts-mp/winedata ; cp cnctsun.desktop ts-mp ; cp wrapper ts-mp ; cp cnctsun.png ts-mp/usr/share/icons ; cp wine-ts.sh ts-mp/winedata
 
-wget -q "https://github.com/mmtrt/dotnet-runtime_AppImage/releases/download/ts-asset/dotnet-runtime-$(wget -qO- https://github.com/mmtrt/dotnet-runtime_AppImage/releases/expanded_assets/ts-asset | grep -Eo me-.* | tail -1 | sed 's|-| |g' | awk '{print $2}')-x86_64.AppImage" -O AppDir/winedata/dotnet ; chmod +x AppDir/winedata/dotnet
+wget -q "https://github.com/mmtrt/dotnet-runtime_AppImage/releases/download/continuous/dotnet-runtime-$(wget -qO- https://github.com/mmtrt/dotnet-runtime_AppImage/releases/expanded_assets/continuous | grep -Eo me-.* | tail -1 | sed 's|-| |g' | awk '{print $2}')-x86_64.AppImage" -O temp/dotnet ; chmod +x temp/dotnet
+
+( cd temp ; ./dotnet --appimage-extract &>/dev/null ; cp -R AppDir/usr/share/dotnet ../AppDir/usr/share/ ) || true
 
 TS_VERSION=7.$(wget --user-agent='Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0' -q -O- https://www.moddb.com/mods/tiberian-sun-client/downloads/tsclient70 | grep TS_Client | cut -d'.' -f2)
 
